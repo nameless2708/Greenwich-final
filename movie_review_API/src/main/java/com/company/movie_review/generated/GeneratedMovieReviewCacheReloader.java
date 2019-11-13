@@ -1,9 +1,9 @@
 package com.company.movie_review.generated;
 
 import com.company.movie_review.movie_review.movie_review.cast.generated.GeneratedCastCacheHolder;
-import com.company.movie_review.movie_review.movie_review.movie.generated.GeneratedMovieCacheHolder;
 import com.company.movie_review.movie_review.movie_review.movie_cast.generated.GeneratedMovieCastCacheHolder;
 import com.company.movie_review.movie_review.movie_review.movie_review.generated.GeneratedMovieReviewCacheHolder;
+import com.company.movie_review.movie_review.movie_review.movies.generated.GeneratedMoviesCacheHolder;
 import com.company.movie_review.movie_review.movie_review.user.generated.GeneratedUserCacheHolder;
 import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.common.benchmark.Stopwatch;
@@ -31,18 +31,18 @@ public abstract class GeneratedMovieReviewCacheReloader implements DataStoreRelo
     @Override
     public DataStoreHolder reload(StreamSupplierComponent streamSupplier, ExecutorService executor) {
         final CompletableFuture<GeneratedCastCacheHolder> castHolder                = GeneratedCastCacheHolder.reload(streamSupplier, executor);
-        final CompletableFuture<GeneratedMovieCacheHolder> movieHolder              = GeneratedMovieCacheHolder.reload(streamSupplier, executor);
         final CompletableFuture<GeneratedMovieCastCacheHolder> movieCastHolder      = GeneratedMovieCastCacheHolder.reload(streamSupplier, executor);
         final CompletableFuture<GeneratedMovieReviewCacheHolder> movieReviewHolder  = GeneratedMovieReviewCacheHolder.reload(streamSupplier, executor);
+        final CompletableFuture<GeneratedMoviesCacheHolder> moviesHolder            = GeneratedMoviesCacheHolder.reload(streamSupplier, executor);
         final CompletableFuture<GeneratedUserCacheHolder> userHolder                = GeneratedUserCacheHolder.reload(streamSupplier, executor);
         
         final DataStoreHolder holder;
         try {
             holder = new GeneratedMovieReviewDataStoreHolder(
                 castHolder.get(),
-                movieHolder.get(),
                 movieCastHolder.get(),
                 movieReviewHolder.get(),
+                moviesHolder.get(),
                 userHolder.get()
             );
         } catch (final ExecutionException | InterruptedException ex) {

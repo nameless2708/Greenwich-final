@@ -1,8 +1,13 @@
 package com.company.movie_review.movie_review.movie_review.movie_review.generated;
 
+import com.company.movie_review.DTO.MovieReviewRequest;
+import com.company.movie_review.MovieReviewApplication;
+import com.company.movie_review.MovieReviewApplicationBuilder;
 import com.company.movie_review.movie_review.movie_review.movie_review.MovieReview;
+import com.company.movie_review.movie_review.movie_review.movie_review.MovieReviewImpl;
 import com.company.movie_review.movie_review.movie_review.movie_review.MovieReviewManager;
 import com.company.movie_review.movie_review.movie_review.movie_review.generated.GeneratedMovieReview.Identifier;
+import com.company.movie_review.movie_review.movie_review.movies.MoviesManager;
 import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.common.json.Json;
 import com.speedment.enterprise.plugins.json.JsonCollectors;
@@ -13,9 +18,7 @@ import com.speedment.enterprise.plugins.spring.runtime.AbstractSort;
 import com.speedment.enterprise.plugins.spring.runtime.ControllerUtil;
 import com.speedment.runtime.field.Field;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -25,6 +28,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotNull;
 
 import static java.util.stream.Collectors.toList;
 
@@ -54,20 +58,45 @@ public abstract class GeneratedMovieReviewController {
             .put("userId", MovieReview.USER_ID)
             .build();
     }
-    
+
+    @CrossOrigin
+    @PostMapping(path = "/movie_review", consumes = "application/json", produces = "application/json")
+    public Object reviewMovie(@RequestBody MovieReviewRequest body){
+        try{
+            MovieReviewApplication app = new MovieReviewApplicationBuilder().withPassword("root").build();
+            MovieReviewManager reviews = app.getOrThrow(MovieReviewManager.class);
+            MovieReview entity = reviews.persist(new MovieReviewImpl().setMovieId(body.getMovie_id()).setContent(body.getReview()).setUserId(body.getUser_id()).setTag(body.getTag()));
+            return entity;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @CrossOrigin
     @GetMapping(path = "/movie_review", produces = "application/json")
     public String get(
             @RequestParam(name = "filter", defaultValue = "[]") String filters,
             @RequestParam(name = "sort", defaultValue = "[]") String sorters,
             @RequestParam(value = "start", defaultValue = "0") long start,
             @RequestParam(value = "limit", defaultValue = "25") long limit) {
-        
+        System.out.println("filter:" + filters);
         return getHelper(
             ControllerUtil.parseFilters(filters, MovieReviewFilter::new).collect(toList()),
             ControllerUtil.parseSorts(sorters, MovieReviewSort::new).collect(toList()),
             start,
             limit
         );
+    }
+
+    @CrossOrigin
+    @GetMapping(path = "/movie_review/{id}", produces = "application/json")
+    public Object findByMovie(
+            @PathVariable @NotNull int id) {
+        MovieReviewApplication app = new MovieReviewApplicationBuilder().withPassword("root").build();
+        MovieReviewManager movieReview = app.getOrThrow(MovieReviewManager.class);
+        return movieReview.stream().filter(MovieReview.MOVIE_ID.equal(id)).toArray();
     }
     
     protected final Set<Identifier> parseColumns(String jsonColumnList) {

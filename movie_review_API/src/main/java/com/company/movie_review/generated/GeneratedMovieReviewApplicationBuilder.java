@@ -6,12 +6,12 @@ import com.company.movie_review.MovieReviewApplicationImpl;
 import com.company.movie_review.MovieReviewCacheReloader;
 import com.company.movie_review.movie_review.movie_review.cast.CastManagerImpl;
 import com.company.movie_review.movie_review.movie_review.cast.CastSqlAdapter;
-import com.company.movie_review.movie_review.movie_review.movie.MovieManagerImpl;
-import com.company.movie_review.movie_review.movie_review.movie.MovieSqlAdapter;
 import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCastManagerImpl;
 import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCastSqlAdapter;
 import com.company.movie_review.movie_review.movie_review.movie_review.MovieReviewManagerImpl;
 import com.company.movie_review.movie_review.movie_review.movie_review.MovieReviewSqlAdapter;
+import com.company.movie_review.movie_review.movie_review.movies.MoviesManagerImpl;
+import com.company.movie_review.movie_review.movie_review.movies.MoviesSqlAdapter;
 import com.company.movie_review.movie_review.movie_review.user.UserManagerImpl;
 import com.company.movie_review.movie_review.movie_review.user.UserSqlAdapter;
 import com.speedment.common.annotation.GeneratedCode;
@@ -34,14 +34,14 @@ public abstract class GeneratedMovieReviewApplicationBuilder extends AbstractApp
     protected GeneratedMovieReviewApplicationBuilder() {
         super(MovieReviewApplicationImpl.class, GeneratedMovieReviewMetadata.class);
         withManager(CastManagerImpl.class);
-        withManager(MovieManagerImpl.class);
         withManager(MovieCastManagerImpl.class);
         withManager(MovieReviewManagerImpl.class);
+        withManager(MoviesManagerImpl.class);
         withManager(UserManagerImpl.class);
         withComponent(CastSqlAdapter.class);
-        withComponent(MovieSqlAdapter.class);
         withComponent(MovieCastSqlAdapter.class);
         withComponent(MovieReviewSqlAdapter.class);
+        withComponent(MoviesSqlAdapter.class);
         withComponent(UserSqlAdapter.class);
         withComponent(MovieReviewCacheReloader.class);
     }

@@ -1,10 +1,18 @@
 package com.company.movie_review.movie_review.movie_review.cast.generated;
 
+import com.company.movie_review.MovieReviewApplication;
+import com.company.movie_review.MovieReviewApplicationBuilder;
 import com.company.movie_review.movie_review.movie_review.cast.Cast;
 import com.company.movie_review.movie_review.movie_review.cast.CastManager;
 import com.company.movie_review.movie_review.movie_review.cast.generated.GeneratedCast.Identifier;
+import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCast;
+import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCastManager;
+import com.company.movie_review.movie_review.movie_review.movies.Movies;
+import com.company.movie_review.movie_review.movie_review.movies.MoviesManager;
 import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.common.json.Json;
+import com.speedment.common.tuple.Tuple3;
+import com.speedment.common.tuple.Tuples;
 import com.speedment.enterprise.plugins.json.JsonCollectors;
 import com.speedment.enterprise.plugins.json.JsonComponent;
 import com.speedment.enterprise.plugins.json.JsonEncoder;
@@ -12,19 +20,19 @@ import com.speedment.enterprise.plugins.spring.runtime.AbstractFilter;
 import com.speedment.enterprise.plugins.spring.runtime.AbstractSort;
 import com.speedment.enterprise.plugins.spring.runtime.ControllerUtil;
 import com.speedment.runtime.field.Field;
+import com.speedment.runtime.join.Join;
+import com.speedment.runtime.join.JoinComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotNull;
 
 import static java.util.stream.Collectors.toList;
 
@@ -53,6 +61,28 @@ public abstract class GeneratedCastController {
             .put("castImage", Cast.CAST_IMAGE)
             .put("castDescription", Cast.CAST_DESCRIPTION)
             .build();
+    }
+
+    @CrossOrigin
+    @GetMapping(path = "/cast/{id}", produces = "application/json")
+    public Object findById(@PathVariable @NotNull int id){
+
+        try{
+            MovieReviewApplication app = new MovieReviewApplicationBuilder().withPassword("root").build();
+            JoinComponent joinComponent = app.getOrThrow(JoinComponent.class);
+            Join<Tuple3<Movies, Cast, MovieCast>> join = joinComponent
+                    .from(MoviesManager.IDENTIFIER)
+                    .rightJoinOn(Cast.ID).equal(MovieCast.CAST_ID)
+                    .where(Cast.ID.equal(id))
+                    .rightJoinOn(MovieCast.ID).equal(MovieCast.MOVIE_ID)
+                    .build((fa, f, a) -> Tuples.of(fa, f, a));
+
+            return join.stream().collect(toList());
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
     
     @GetMapping(path = "/cast", produces = "application/json")

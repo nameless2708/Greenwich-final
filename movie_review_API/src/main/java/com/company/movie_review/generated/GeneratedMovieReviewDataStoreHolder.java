@@ -2,12 +2,12 @@ package com.company.movie_review.generated;
 
 import com.company.movie_review.movie_review.movie_review.cast.Cast;
 import com.company.movie_review.movie_review.movie_review.cast.generated.GeneratedCastCacheHolder;
-import com.company.movie_review.movie_review.movie_review.movie.Movie;
-import com.company.movie_review.movie_review.movie_review.movie.generated.GeneratedMovieCacheHolder;
 import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCast;
 import com.company.movie_review.movie_review.movie_review.movie_cast.generated.GeneratedMovieCastCacheHolder;
 import com.company.movie_review.movie_review.movie_review.movie_review.MovieReview;
 import com.company.movie_review.movie_review.movie_review.movie_review.generated.GeneratedMovieReviewCacheHolder;
+import com.company.movie_review.movie_review.movie_review.movies.Movies;
+import com.company.movie_review.movie_review.movie_review.movies.generated.GeneratedMoviesCacheHolder;
 import com.company.movie_review.movie_review.movie_review.user.User;
 import com.company.movie_review.movie_review.movie_review.user.generated.GeneratedUserCacheHolder;
 import com.speedment.common.annotation.GeneratedCode;
@@ -37,21 +37,21 @@ import static java.util.Objects.requireNonNull;
 public final class GeneratedMovieReviewDataStoreHolder implements DataStoreHolder {
     
     private final GeneratedCastCacheHolder castHolder;
-    private final GeneratedMovieCacheHolder movieHolder;
     private final GeneratedMovieCastCacheHolder movieCastHolder;
     private final GeneratedMovieReviewCacheHolder movieReviewHolder;
+    private final GeneratedMoviesCacheHolder moviesHolder;
     private final GeneratedUserCacheHolder userHolder;
     
     public GeneratedMovieReviewDataStoreHolder(
             GeneratedCastCacheHolder castHolder,
-            GeneratedMovieCacheHolder movieHolder,
             GeneratedMovieCastCacheHolder movieCastHolder,
             GeneratedMovieReviewCacheHolder movieReviewHolder,
+            GeneratedMoviesCacheHolder moviesHolder,
             GeneratedUserCacheHolder userHolder) {
         this.castHolder        = requireNonNull(castHolder);
-        this.movieHolder       = requireNonNull(movieHolder);
         this.movieCastHolder   = requireNonNull(movieCastHolder);
         this.movieReviewHolder = requireNonNull(movieReviewHolder);
+        this.moviesHolder      = requireNonNull(moviesHolder);
         this.userHolder        = requireNonNull(userHolder);
     }
     
@@ -63,9 +63,9 @@ public final class GeneratedMovieReviewDataStoreHolder implements DataStoreHolde
             String tableName) {
         switch (tableName) {
             case "cast"         : return (EntityStore<ENTITY>) castHolder.getEntityStore();
-            case "movie"        : return (EntityStore<ENTITY>) movieHolder.getEntityStore();
             case "movie_cast"   : return (EntityStore<ENTITY>) movieCastHolder.getEntityStore();
             case "movie_review" : return (EntityStore<ENTITY>) movieReviewHolder.getEntityStore();
+            case "movies"       : return (EntityStore<ENTITY>) moviesHolder.getEntityStore();
             case "user"         : return (EntityStore<ENTITY>) userHolder.getEntityStore();
             default : throw new UnsupportedOperationException(
                 String.format("Could not find '%s' in database model.", tableName)
@@ -78,9 +78,9 @@ public final class GeneratedMovieReviewDataStoreHolder implements DataStoreHolde
     public <ENTITY, CACHE extends FieldCache<CACHE>> CACHE getFieldCache(ColumnIdentifier<ENTITY> columnId) {
         switch (columnId.getTableId()) {
             case "cast"         : return (CACHE) castHolder.getFieldCache((ColumnIdentifier<Cast>) columnId);
-            case "movie"        : return (CACHE) movieHolder.getFieldCache((ColumnIdentifier<Movie>) columnId);
             case "movie_cast"   : return (CACHE) movieCastHolder.getFieldCache((ColumnIdentifier<MovieCast>) columnId);
             case "movie_review" : return (CACHE) movieReviewHolder.getFieldCache((ColumnIdentifier<MovieReview>) columnId);
+            case "movies"       : return (CACHE) moviesHolder.getFieldCache((ColumnIdentifier<Movies>) columnId);
             case "user"         : return (CACHE) userHolder.getFieldCache((ColumnIdentifier<User>) columnId);
             default : throw new UnsupportedOperationException(
                 String.format("Could not find '%s' in database model.", columnId.getTableId())
@@ -117,9 +117,9 @@ public final class GeneratedMovieReviewDataStoreHolder implements DataStoreHolde
     public Stream<EntityStoreHolder<?>> holders() {
         return Stream.of(
             castHolder,
-            movieHolder,
             movieCastHolder,
             movieReviewHolder,
+            moviesHolder,
             userHolder
         );
     }

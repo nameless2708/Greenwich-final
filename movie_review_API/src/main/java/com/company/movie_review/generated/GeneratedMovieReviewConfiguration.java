@@ -3,9 +3,9 @@ package com.company.movie_review.generated;
 import com.company.movie_review.MovieReviewApplication;
 import com.company.movie_review.MovieReviewApplicationBuilder;
 import com.company.movie_review.movie_review.movie_review.cast.CastManager;
-import com.company.movie_review.movie_review.movie_review.movie.MovieManager;
 import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCastManager;
 import com.company.movie_review.movie_review.movie_review.movie_review.MovieReviewManager;
+import com.company.movie_review.movie_review.movie_review.movies.MoviesManager;
 import com.company.movie_review.movie_review.movie_review.user.UserManager;
 import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.enterprise.datastore.runtime.DataStoreBundle;
@@ -107,11 +107,6 @@ public class GeneratedMovieReviewConfiguration {
     }
     
     @Bean
-    public MovieManager getMovieManager(MovieReviewApplication app) {
-        return app.getOrThrow(MovieManager.class);
-    }
-    
-    @Bean
     public MovieCastManager getMovieCastManager(MovieReviewApplication app) {
         return app.getOrThrow(MovieCastManager.class);
     }
@@ -119,6 +114,11 @@ public class GeneratedMovieReviewConfiguration {
     @Bean
     public MovieReviewManager getMovieReviewManager(MovieReviewApplication app) {
         return app.getOrThrow(MovieReviewManager.class);
+    }
+    
+    @Bean
+    public MoviesManager getMoviesManager(MovieReviewApplication app) {
+        return app.getOrThrow(MoviesManager.class);
     }
     
     @Bean
