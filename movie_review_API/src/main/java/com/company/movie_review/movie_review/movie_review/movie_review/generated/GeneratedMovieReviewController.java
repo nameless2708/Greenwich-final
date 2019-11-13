@@ -59,6 +59,7 @@ public abstract class GeneratedMovieReviewController {
             .build();
     }
 
+    
     @CrossOrigin
     @PostMapping(path = "/movie_review", consumes = "application/json", produces = "application/json")
     public Object reviewMovie(@RequestBody MovieReviewRequest body){
