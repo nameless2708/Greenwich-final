@@ -34,11 +34,13 @@ public abstract class GeneratedMovieReviewSqlAdapter implements SqlAdapter<Movie
     
     protected MovieReview apply(ResultSet resultSet, int offset) throws SQLException {
         return createEntity()
-            .setId(      resultSet.getInt(1 + offset))
-            .setMovieId( getInt(resultSet, 2 + offset))
-            .setContent( resultSet.getString(3 + offset))
-            .setTag(     getInt(resultSet, 4 + offset))
-            .setUserId(  getInt(resultSet, 5 + offset))
+            .setId(         resultSet.getInt(1 + offset))
+            .setMovieId(    getInt(resultSet, 2 + offset))
+            .setContent(    resultSet.getString(3 + offset))
+            .setTag(        getInt(resultSet, 4 + offset))
+            .setUserId(     getInt(resultSet, 5 + offset))
+            .setCreateDate( resultSet.getTimestamp(6 + offset))
+            .setRating(     getInt(resultSet, 7 + offset))
             ;
     }
     

@@ -7,7 +7,6 @@ import com.company.movie_review.movie_review.movie_review.movie_review.MovieRevi
 import com.company.movie_review.movie_review.movie_review.movie_review.MovieReviewImpl;
 import com.company.movie_review.movie_review.movie_review.movie_review.MovieReviewManager;
 import com.company.movie_review.movie_review.movie_review.movie_review.generated.GeneratedMovieReview.Identifier;
-import com.company.movie_review.movie_review.movie_review.movies.MoviesManager;
 import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.common.json.Json;
 import com.speedment.enterprise.plugins.json.JsonCollectors;
@@ -20,6 +19,7 @@ import com.speedment.runtime.field.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
@@ -56,10 +56,11 @@ public abstract class GeneratedMovieReviewController {
             .put("content", MovieReview.CONTENT)
             .put("tag", MovieReview.TAG)
             .put("userId", MovieReview.USER_ID)
+            .put("createDate", MovieReview.CREATE_DATE)
+            .put("rating", MovieReview.RATING)
             .build();
     }
 
-    
     @CrossOrigin
     @PostMapping(path = "/movie_review", consumes = "application/json", produces = "application/json")
     public Object reviewMovie(@RequestBody MovieReviewRequest body){
@@ -76,28 +77,27 @@ public abstract class GeneratedMovieReviewController {
     }
 
     @CrossOrigin
-    @GetMapping(path = "/movie_review", produces = "application/json")
-    public String get(
-            @RequestParam(name = "filter", defaultValue = "[]") String filters,
-            @RequestParam(name = "sort", defaultValue = "[]") String sorters,
-            @RequestParam(value = "start", defaultValue = "0") long start,
-            @RequestParam(value = "limit", defaultValue = "25") long limit) {
-        System.out.println("filter:" + filters);
-        return getHelper(
-            ControllerUtil.parseFilters(filters, MovieReviewFilter::new).collect(toList()),
-            ControllerUtil.parseSorts(sorters, MovieReviewSort::new).collect(toList()),
-            start,
-            limit
-        );
-    }
-
-    @CrossOrigin
     @GetMapping(path = "/movie_review/{id}", produces = "application/json")
     public Object findByMovie(
             @PathVariable @NotNull int id) {
         MovieReviewApplication app = new MovieReviewApplicationBuilder().withPassword("root").build();
         MovieReviewManager movieReview = app.getOrThrow(MovieReviewManager.class);
         return movieReview.stream().filter(MovieReview.MOVIE_ID.equal(id)).toArray();
+    }
+    
+    @GetMapping(path = "/movie_review", produces = "application/json")
+    public String get(
+            @RequestParam(name = "filter", defaultValue = "[]") String filters,
+            @RequestParam(name = "sort", defaultValue = "[]") String sorters,
+            @RequestParam(value = "start", defaultValue = "0") long start,
+            @RequestParam(value = "limit", defaultValue = "25") long limit) {
+        
+        return getHelper(
+            ControllerUtil.parseFilters(filters, MovieReviewFilter::new).collect(toList()),
+            ControllerUtil.parseSorts(sorters, MovieReviewSort::new).collect(toList()),
+            start,
+            limit
+        );
     }
     
     protected final Set<Identifier> parseColumns(String jsonColumnList) {
@@ -114,11 +114,13 @@ public abstract class GeneratedMovieReviewController {
     
     protected final Identifier parseColumn(String jsonColumn) {
         switch (jsonColumn) {
-            case "id":      return GeneratedMovieReview.Identifier.ID;
-            case "movieId": return GeneratedMovieReview.Identifier.MOVIE_ID;
-            case "content": return GeneratedMovieReview.Identifier.CONTENT;
-            case "tag":     return GeneratedMovieReview.Identifier.TAG;
-            case "userId":  return GeneratedMovieReview.Identifier.USER_ID;
+            case "id":         return GeneratedMovieReview.Identifier.ID;
+            case "movieId":    return GeneratedMovieReview.Identifier.MOVIE_ID;
+            case "content":    return GeneratedMovieReview.Identifier.CONTENT;
+            case "tag":        return GeneratedMovieReview.Identifier.TAG;
+            case "userId":     return GeneratedMovieReview.Identifier.USER_ID;
+            case "createDate": return GeneratedMovieReview.Identifier.CREATE_DATE;
+            case "rating":     return GeneratedMovieReview.Identifier.RATING;
             default: throw new IllegalArgumentException(
                 "Unknown column '" + jsonColumn + "'."
             );
@@ -127,11 +129,13 @@ public abstract class GeneratedMovieReviewController {
     
     protected final Field<MovieReview> fieldOf(Identifier columnId) {
         switch (columnId) {
-            case ID:       return MovieReview.ID;
-            case MOVIE_ID: return MovieReview.MOVIE_ID;
-            case CONTENT:  return MovieReview.CONTENT;
-            case TAG:      return MovieReview.TAG;
-            case USER_ID:  return MovieReview.USER_ID;
+            case ID:          return MovieReview.ID;
+            case MOVIE_ID:    return MovieReview.MOVIE_ID;
+            case CONTENT:     return MovieReview.CONTENT;
+            case TAG:         return MovieReview.TAG;
+            case USER_ID:     return MovieReview.USER_ID;
+            case CREATE_DATE: return MovieReview.CREATE_DATE;
+            case RATING:      return MovieReview.RATING;
             default: throw new IllegalArgumentException(
                 "Unknown column '" + columnId + "'."
             );
@@ -258,6 +262,38 @@ public abstract class GeneratedMovieReviewController {
                         );
                     }
                 }
+                case "createDate" : {
+                    final Timestamp v = Timestamp.valueOf(value());
+                    switch (operator()) {
+                        case "eq"   : return MovieReview.CREATE_DATE.equal(v);
+                        case "ne"   : return MovieReview.CREATE_DATE.notEqual(v);
+                        case "lt"   : return MovieReview.CREATE_DATE.lessThan(v);
+                        case "le"   : return MovieReview.CREATE_DATE.lessOrEqual(v);
+                        case "gt"   : return MovieReview.CREATE_DATE.greaterThan(v);
+                        case "ge"   : return MovieReview.CREATE_DATE.greaterOrEqual(v);
+                        case "like" : // Fallthrough
+                        default : throw new IllegalArgumentException(
+                            "'" + operator() + "' is not a valid operator for " +
+                            "MovieReview.createDate."
+                        );
+                    }
+                }
+                case "rating" : {
+                    final Integer v = Integer.parseInt(value());
+                    switch (operator()) {
+                        case "eq"   : return MovieReview.RATING.equal(v);
+                        case "ne"   : return MovieReview.RATING.notEqual(v);
+                        case "lt"   : return MovieReview.RATING.lessThan(v);
+                        case "le"   : return MovieReview.RATING.lessOrEqual(v);
+                        case "gt"   : return MovieReview.RATING.greaterThan(v);
+                        case "ge"   : return MovieReview.RATING.greaterOrEqual(v);
+                        case "like" : // Fallthrough
+                        default : throw new IllegalArgumentException(
+                            "'" + operator() + "' is not a valid operator for " +
+                            "MovieReview.rating."
+                        );
+                    }
+                }
                 default : throw new IllegalArgumentException(
                     "'" + property() + "' is not a valid MovieReview property."
                 );
@@ -279,11 +315,13 @@ public abstract class GeneratedMovieReviewController {
         public Comparator<MovieReview> toComparator() {
             final Comparator<MovieReview> comparator;
             switch (property()) {
-                case "id"      : comparator = MovieReview.ID.comparator();       break;
-                case "movieId" : comparator = MovieReview.MOVIE_ID.comparator(); break;
-                case "content" : comparator = MovieReview.CONTENT.comparator();  break;
-                case "tag"     : comparator = MovieReview.TAG.comparator();      break;
-                case "userId"  : comparator = MovieReview.USER_ID.comparator();  break;
+                case "id"         : comparator = MovieReview.ID.comparator();          break;
+                case "movieId"    : comparator = MovieReview.MOVIE_ID.comparator();    break;
+                case "content"    : comparator = MovieReview.CONTENT.comparator();     break;
+                case "tag"        : comparator = MovieReview.TAG.comparator();         break;
+                case "userId"     : comparator = MovieReview.USER_ID.comparator();     break;
+                case "createDate" : comparator = MovieReview.CREATE_DATE.comparator(); break;
+                case "rating"     : comparator = MovieReview.RATING.comparator();      break;
                 default : throw new IllegalArgumentException(
                     "'" + property() + "' is not a valid MovieReview property."
                 );

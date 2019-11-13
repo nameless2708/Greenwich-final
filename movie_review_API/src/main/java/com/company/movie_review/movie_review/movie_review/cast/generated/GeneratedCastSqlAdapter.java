@@ -38,6 +38,7 @@ public abstract class GeneratedCastSqlAdapter implements SqlAdapter<Cast> {
             .setCastGender(      getInt(resultSet, 3 + offset))
             .setCastImage(       resultSet.getString(4 + offset))
             .setCastDescription( resultSet.getString(5 + offset))
+            .setCastBirthday(    resultSet.getDate(6 + offset))
             ;
     }
     

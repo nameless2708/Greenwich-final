@@ -22,6 +22,7 @@ import com.speedment.enterprise.datastore.runtime.util.Utf8Util;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 
 import java.nio.ByteBuffer;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.LongConsumer;
@@ -51,8 +52,10 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
     private final static int ENDPOS_MOVIE_ID = 4;
     private final static int ENDPOS_TAG = 5;
     private final static int ENDPOS_USER_ID = 6;
-    private final static int ENDPOS_CONTENT = 7;
-    private final static int VARSIZE_BEGINS = 11;
+    private final static int ENDPOS_RATING = 7;
+    private final static int ENDPOS_CREATE_DATE = 8;
+    private final static int ENDPOS_CONTENT = 9;
+    private final static int VARSIZE_BEGINS = 13;
     
     protected GeneratedMovieReviewEntityStoreSerializerImpl(final LongFunction<ByteBuffer> bufferFinder, final LongToIntFunction offsetFinder) {
         this.bufferFinder = requireNonNull(bufferFinder);
@@ -84,6 +87,20 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                 buffer.put(ENDPOS_USER_ID, (byte) varSizePos);
             } else {
                 buffer.put(ENDPOS_USER_ID, (byte) (0x80 | varSizePos));
+            }
+            if (entity.getRating().isPresent()) {
+                buffer.putInt(VARSIZE_BEGINS + varSizePos, entity.getRating().getAsInt());
+                varSizePos += Integer.BYTES;
+                buffer.put(ENDPOS_RATING, (byte) varSizePos);
+            } else {
+                buffer.put(ENDPOS_RATING, (byte) (0x80 | varSizePos));
+            }
+            if (entity.getCreateDate().isPresent()) {
+                buffer.putLong(VARSIZE_BEGINS + varSizePos, entity.getCreateDate().get().getTime());
+                varSizePos += Long.BYTES;
+                buffer.put(ENDPOS_CREATE_DATE, (byte) varSizePos);
+            } else {
+                buffer.put(ENDPOS_CREATE_DATE, (byte) (0x80 | varSizePos));
             }
             if (entity.getContent().isPresent()) {
                 varSizePos += ByteBufferUtil.putArrayAbsolute(buffer, VARSIZE_BEGINS + varSizePos, entity.getContent().get().getBytes());
@@ -128,6 +145,12 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
             if (buffer.get(offset + ENDPOS_USER_ID) >= 0) {
                 entity.setUserId(buffer.getInt(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_USER_ID) - Integer.BYTES));
             }
+            if (buffer.get(offset + ENDPOS_CREATE_DATE) >= 0) {
+                entity.setCreateDate(new Timestamp(buffer.getLong(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_CREATE_DATE) - Long.BYTES)));
+            }
+            if (buffer.get(offset + ENDPOS_RATING) >= 0) {
+                entity.setRating(buffer.getInt(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_RATING) - Integer.BYTES));
+            }
             return entity;
         };
     }
@@ -137,11 +160,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         if (colId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
             switch (_id) {
-                case ID       : 
-                case MOVIE_ID : 
-                case TAG      : 
-                case USER_ID  : return int.class;
-                case CONTENT  : return String.class;
+                case ID          : 
+                case MOVIE_ID    : 
+                case TAG         : 
+                case USER_ID     : 
+                case RATING      : return int.class;
+                case CREATE_DATE : return Timestamp.class;
+                case CONTENT     : return String.class;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown enum constant '%s'.", _id)
@@ -151,11 +176,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
-                case "ID"       : 
-                case "Movie_id" : 
-                case "Tag"      : 
-                case "User_id"  : return int.class;
-                case "Content"  : return String.class;
+                case "ID"          : 
+                case "Movie_id"    : 
+                case "Tag"         : 
+                case "User_id"     : 
+                case "Rating"      : return int.class;
+                case "Create_date" : return Timestamp.class;
+                case "Content"     : return String.class;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown column name '%s'.", _colName)
@@ -185,11 +212,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         if (colId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
             switch (_id) {
-                case ID       : return ALWAYS_FALSE;
-                case MOVIE_ID : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_MOVIE_ID) < 0;
-                case TAG      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_TAG) < 0;
-                case USER_ID  : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_USER_ID) < 0;
-                case CONTENT  : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) < 0;
+                case ID          : return ALWAYS_FALSE;
+                case MOVIE_ID    : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_MOVIE_ID) < 0;
+                case TAG         : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_TAG) < 0;
+                case USER_ID     : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_USER_ID) < 0;
+                case RATING      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_RATING) < 0;
+                case CREATE_DATE : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CREATE_DATE) < 0;
+                case CONTENT     : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) < 0;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown enum constant '%s'.", _id)
@@ -199,11 +228,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
-                case "ID"       : return ALWAYS_FALSE;
-                case "Movie_id" : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_MOVIE_ID) < 0;
-                case "Tag"      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_TAG) < 0;
-                case "User_id"  : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_USER_ID) < 0;
-                case "Content"  : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) < 0;
+                case "ID"          : return ALWAYS_FALSE;
+                case "Movie_id"    : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_MOVIE_ID) < 0;
+                case "Tag"         : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_TAG) < 0;
+                case "User_id"     : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_USER_ID) < 0;
+                case "Rating"      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_RATING) < 0;
+                case "Create_date" : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CREATE_DATE) < 0;
+                case "Content"     : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) < 0;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown column name '%s'.", _colName)
@@ -218,11 +249,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         if (colId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
             switch (_id) {
-                case ID       : return ALWAYS_TRUE;
-                case MOVIE_ID : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_MOVIE_ID) >= 0;
-                case TAG      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_TAG) >= 0;
-                case USER_ID  : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_USER_ID) >= 0;
-                case CONTENT  : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) >= 0;
+                case ID          : return ALWAYS_TRUE;
+                case MOVIE_ID    : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_MOVIE_ID) >= 0;
+                case TAG         : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_TAG) >= 0;
+                case USER_ID     : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_USER_ID) >= 0;
+                case RATING      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_RATING) >= 0;
+                case CREATE_DATE : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CREATE_DATE) >= 0;
+                case CONTENT     : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) >= 0;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown enum constant '%s'.", _id)
@@ -232,11 +265,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
-                case "ID"       : return ALWAYS_TRUE;
-                case "Movie_id" : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_MOVIE_ID) >= 0;
-                case "Tag"      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_TAG) >= 0;
-                case "User_id"  : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_USER_ID) >= 0;
-                case "Content"  : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) >= 0;
+                case "ID"          : return ALWAYS_TRUE;
+                case "Movie_id"    : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_MOVIE_ID) >= 0;
+                case "Tag"         : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_TAG) >= 0;
+                case "User_id"     : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_USER_ID) >= 0;
+                case "Rating"      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_RATING) >= 0;
+                case "Create_date" : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CREATE_DATE) >= 0;
+                case "Content"     : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) >= 0;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown column name '%s'.", _colName)
@@ -281,6 +316,11 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.getInt(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_USER_ID) - Integer.BYTES);
                 };
+                case RATING   : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return buffer.getInt(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_RATING) - Integer.BYTES);
+                };
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("The column '%s' is either unknown or not of type int.", _id)
@@ -305,6 +345,11 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.getInt(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_USER_ID) - Integer.BYTES);
+                };
+                case "Rating"   : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return buffer.getInt(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_RATING) - Integer.BYTES);
                 };
                 default : {
                     throw new UnsupportedOperationException(
@@ -352,25 +397,61 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
     
     @Override
     public LongFunction<?> objectDeserializer(final ColumnIdentifier<MovieReview> colId) {
-        if ("Content".equals(colId.getColumnId())) {
-            return ref -> {
-                final ByteBuffer buffer = bufferFinder.apply(ref);
-                final int offset = offsetFinder.applyAsInt(ref);
-                try {
-                    return Utf8Util.deserialize(buffer,
-                        offset + VARSIZE_BEGINS + (0x7f & buffer.get(offset + ENDPOS_CONTENT - Byte.BYTES)),
-                        offset + VARSIZE_BEGINS + buffer.getInt(offset + ENDPOS_CONTENT)
+        if (colId instanceof MovieReview.Identifier) {
+            final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
+            switch (_id) {
+                case CREATE_DATE : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return new Timestamp(buffer.getLong(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_CREATE_DATE) - Long.BYTES));
+                };
+                case CONTENT     : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    try {
+                        return Utf8Util.deserialize(buffer,
+                            offset + VARSIZE_BEGINS + (0x7f & buffer.get(offset + ENDPOS_CONTENT - Byte.BYTES)),
+                            offset + VARSIZE_BEGINS + buffer.getInt(offset + ENDPOS_CONTENT)
+                        );
+                    } catch (final Utf8Exception ex) {
+                        final LongToIntFunction sizeOf = sizeOf();
+                        throw new DeserializationException(buffer, offset, sizeOf.applyAsInt(ref), ex);
+                    }
+                };
+                default : {
+                    throw new UnsupportedOperationException(
+                        String.format("Unknown enum constant '%s'.", _id)
                     );
-                } catch (final Utf8Exception ex) {
-                    final LongToIntFunction sizeOf = sizeOf();
-                    throw new DeserializationException(buffer, offset, sizeOf.applyAsInt(ref), ex);
                 }
-            };
+            }
+        } else {
+            final String _colName = colId.getColumnId();
+            switch (_colName) {
+                case "Create_date" : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return new Timestamp(buffer.getLong(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_CREATE_DATE) - Long.BYTES));
+                };
+                case "Content"     : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    try {
+                        return Utf8Util.deserialize(buffer,
+                            offset + VARSIZE_BEGINS + (0x7f & buffer.get(offset + ENDPOS_CONTENT - Byte.BYTES)),
+                            offset + VARSIZE_BEGINS + buffer.getInt(offset + ENDPOS_CONTENT)
+                        );
+                    } catch (final Utf8Exception ex) {
+                        final LongToIntFunction sizeOf = sizeOf();
+                        throw new DeserializationException(buffer, offset, sizeOf.applyAsInt(ref), ex);
+                    }
+                };
+                default : {
+                    throw new UnsupportedOperationException(
+                        String.format("Unknown column name '%s'.", _colName)
+                    );
+                }
+            }
         }
-        
-        throw new UnsupportedOperationException(
-            String.format("Unknown column name '%s'.", colId.getColumnId())
-        );
     }
     
     @Override
@@ -378,11 +459,11 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         if (colId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
             switch (_id) {
-                case ID       : return (aRef, bRef) -> Integer.compare(
+                case ID          : return (aRef, bRef) -> Integer.compare(
                     bufferFinder.apply(aRef).getInt(offsetFinder.applyAsInt(aRef) + FIELD_ID),
                     bufferFinder.apply(bRef).getInt(offsetFinder.applyAsInt(bRef) + FIELD_ID)
                 );
-                case MOVIE_ID : return (aRef, bRef) -> {
+                case MOVIE_ID    : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -392,7 +473,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_MOVIE_ID) - Integer.BYTES)
                     );
                 };
-                case TAG      : return (aRef, bRef) -> {
+                case TAG         : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -402,7 +483,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_TAG) - Integer.BYTES)
                     );
                 };
-                case USER_ID  : return (aRef, bRef) -> {
+                case USER_ID     : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -412,7 +493,27 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_USER_ID) - Integer.BYTES)
                     );
                 };
-                case CONTENT  : return (aRef, bRef) -> {
+                case RATING      : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    return Integer.compare(
+                        aBuf.getInt(aOffset + VARSIZE_BEGINS + aBuf.get(aOffset + ENDPOS_RATING) - Integer.BYTES),
+                        bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_RATING) - Integer.BYTES)
+                    );
+                };
+                case CREATE_DATE : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    return Long.compare(
+                        aBuf.getLong(aOffset + VARSIZE_BEGINS + aBuf.get(aOffset + ENDPOS_CREATE_DATE) - Long.BYTES),
+                        bBuf.getLong(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_CREATE_DATE) - Long.BYTES)
+                    );
+                };
+                case CONTENT     : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -435,11 +536,11 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
-                case "ID"       : return (aRef, bRef) -> Integer.compare(
+                case "ID"          : return (aRef, bRef) -> Integer.compare(
                     bufferFinder.apply(aRef).getInt(offsetFinder.applyAsInt(aRef) + FIELD_ID),
                     bufferFinder.apply(bRef).getInt(offsetFinder.applyAsInt(bRef) + FIELD_ID)
                 );
-                case "Movie_id" : return (aRef, bRef) -> {
+                case "Movie_id"    : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -449,7 +550,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_MOVIE_ID) - Integer.BYTES)
                     );
                 };
-                case "Tag"      : return (aRef, bRef) -> {
+                case "Tag"         : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -459,7 +560,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_TAG) - Integer.BYTES)
                     );
                 };
-                case "User_id"  : return (aRef, bRef) -> {
+                case "User_id"     : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -469,7 +570,27 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_USER_ID) - Integer.BYTES)
                     );
                 };
-                case "Content"  : return (aRef, bRef) -> {
+                case "Rating"      : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    return Integer.compare(
+                        aBuf.getInt(aOffset + VARSIZE_BEGINS + aBuf.get(aOffset + ENDPOS_RATING) - Integer.BYTES),
+                        bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_RATING) - Integer.BYTES)
+                    );
+                };
+                case "Create_date" : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    return Long.compare(
+                        aBuf.getLong(aOffset + VARSIZE_BEGINS + aBuf.get(aOffset + ENDPOS_CREATE_DATE) - Long.BYTES),
+                        bBuf.getLong(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_CREATE_DATE) - Long.BYTES)
+                    );
+                };
+                case "Content"     : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -497,11 +618,11 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         if (colId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
             switch (_id) {
-                case ID       : return (aRef, bRef) -> Integer.compare(
+                case ID          : return (aRef, bRef) -> Integer.compare(
                     bufferFinder.apply(aRef).getInt(offsetFinder.applyAsInt(aRef) + FIELD_ID),
                     bufferFinder.apply(bRef).getInt(offsetFinder.applyAsInt(bRef) + FIELD_ID)
                 );
-                case MOVIE_ID : return (aRef, bRef) -> {
+                case MOVIE_ID    : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -516,7 +637,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
                     );
                 };
-                case TAG      : return (aRef, bRef) -> {
+                case TAG         : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -531,7 +652,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
                     );
                 };
-                case USER_ID  : return (aRef, bRef) -> {
+                case USER_ID     : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -546,7 +667,37 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
                     );
                 };
-                case CONTENT  : return (aRef, bRef) -> {
+                case RATING      : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    final int aEndPos = aBuf.get(aOffset + ENDPOS_RATING);
+                    final int bEndPos = bBuf.get(bOffset + ENDPOS_RATING);
+                    if (aEndPos < 0 && bEndPos < 0) return 0;
+                    else if (aEndPos < 0) return 1;
+                    else if (bEndPos < 0) return -1;
+                    else return Integer.compare(
+                        aBuf.getInt(aOffset + VARSIZE_BEGINS + aEndPos - Integer.BYTES),
+                        bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
+                    );
+                };
+                case CREATE_DATE : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    final int aEndPos = aBuf.get(aOffset + ENDPOS_CREATE_DATE);
+                    final int bEndPos = bBuf.get(bOffset + ENDPOS_CREATE_DATE);
+                    if (aEndPos < 0 && bEndPos < 0) return 0;
+                    else if (aEndPos < 0) return 1;
+                    else if (bEndPos < 0) return -1;
+                    else return Long.compare(
+                        aBuf.getLong(aOffset + VARSIZE_BEGINS + aEndPos - Long.BYTES),
+                        bBuf.getLong(bOffset + VARSIZE_BEGINS + bEndPos - Long.BYTES)
+                    );
+                };
+                case CONTENT     : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -572,11 +723,11 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
-                case "ID"       : return (aRef, bRef) -> Integer.compare(
+                case "ID"          : return (aRef, bRef) -> Integer.compare(
                     bufferFinder.apply(aRef).getInt(offsetFinder.applyAsInt(aRef) + FIELD_ID),
                     bufferFinder.apply(bRef).getInt(offsetFinder.applyAsInt(bRef) + FIELD_ID)
                 );
-                case "Movie_id" : return (aRef, bRef) -> {
+                case "Movie_id"    : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -591,7 +742,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
                     );
                 };
-                case "Tag"      : return (aRef, bRef) -> {
+                case "Tag"         : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -606,7 +757,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
                     );
                 };
-                case "User_id"  : return (aRef, bRef) -> {
+                case "User_id"     : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -621,7 +772,37 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
                     );
                 };
-                case "Content"  : return (aRef, bRef) -> {
+                case "Rating"      : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    final int aEndPos = aBuf.get(aOffset + ENDPOS_RATING);
+                    final int bEndPos = bBuf.get(bOffset + ENDPOS_RATING);
+                    if (aEndPos < 0 && bEndPos < 0) return 0;
+                    else if (aEndPos < 0) return 1;
+                    else if (bEndPos < 0) return -1;
+                    else return Integer.compare(
+                        aBuf.getInt(aOffset + VARSIZE_BEGINS + aEndPos - Integer.BYTES),
+                        bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
+                    );
+                };
+                case "Create_date" : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    final int aEndPos = aBuf.get(aOffset + ENDPOS_CREATE_DATE);
+                    final int bEndPos = bBuf.get(bOffset + ENDPOS_CREATE_DATE);
+                    if (aEndPos < 0 && bEndPos < 0) return 0;
+                    else if (aEndPos < 0) return 1;
+                    else if (bEndPos < 0) return -1;
+                    else return Long.compare(
+                        aBuf.getLong(aOffset + VARSIZE_BEGINS + aEndPos - Long.BYTES),
+                        bBuf.getLong(bOffset + VARSIZE_BEGINS + bEndPos - Long.BYTES)
+                    );
+                };
+                case "Content"     : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
                     final int aOffset = offsetFinder.applyAsInt(aRef);
@@ -712,6 +893,19 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         );
                     };
                 }
+                case RATING   : {
+                    final int operand = value;
+                    return ref -> {
+                        final ByteBuffer buffer = bufferFinder.apply(ref);
+                        final int offset = offsetFinder.applyAsInt(ref);
+                        final int endPos = buffer.get(offset + ENDPOS_RATING);
+                        if (endPos < 0) return 1;
+                        else return Integer.compare(
+                            buffer.getInt(offset + VARSIZE_BEGINS + endPos - Integer.BYTES),
+                            operand
+                        );
+                    };
+                }
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("The column '%s' is either unknown or not of type int.", _id)
@@ -767,6 +961,19 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         );
                     };
                 }
+                case "Rating"   : {
+                    final int operand = value;
+                    return ref -> {
+                        final ByteBuffer buffer = bufferFinder.apply(ref);
+                        final int offset = offsetFinder.applyAsInt(ref);
+                        final int endPos = buffer.get(offset + ENDPOS_RATING);
+                        if (endPos < 0) return 1;
+                        else return Integer.compare(
+                            buffer.getInt(offset + VARSIZE_BEGINS + endPos - Integer.BYTES),
+                            operand
+                        );
+                    };
+                }
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("The column '%s' is either unknown or not of type int.", _colName)
@@ -813,25 +1020,77 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
     
     @Override
     public LongToIntFunction compareToObject(final ColumnIdentifier<MovieReview> colId, final Object value) {
-        if ("Content".equals(colId.getColumnId())) {
-            {
-                final ByteBuffer tempBuffer = ByteBuffer.wrap(((String) value).getBytes());
-                final int tempSize = tempBuffer.capacity();
-                return ref -> {
-                    final ByteBuffer buffer = bufferFinder.apply(ref);
-                    final int offset = offsetFinder.applyAsInt(ref);
-                    return ByteBufferUtil.compare(buffer,
-                        offset + VARSIZE_BEGINS + (0x7f & buffer.get(offset + ENDPOS_CONTENT - Byte.BYTES)),
-                        offset + VARSIZE_BEGINS + buffer.getInt(offset + ENDPOS_CONTENT),
-                        tempBuffer, 0, tempSize
+        if (colId instanceof MovieReview.Identifier) {
+            final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
+            switch (_id) {
+                case CREATE_DATE : {
+                    final long operand = ((Timestamp) value).getTime();
+                    return ref -> {
+                        final ByteBuffer buffer = bufferFinder.apply(ref);
+                        final int offset = offsetFinder.applyAsInt(ref);
+                        final int endPos = buffer.get(offset + ENDPOS_CREATE_DATE);
+                        if (endPos < 0) return 1;
+                        else return Long.compare(
+                            buffer.getLong(offset + VARSIZE_BEGINS + endPos - Long.BYTES),
+                            operand
+                        );
+                    };
+                }
+                case CONTENT     : {
+                    final ByteBuffer tempBuffer = ByteBuffer.wrap(((String) value).getBytes());
+                    final int tempSize = tempBuffer.capacity();
+                    return ref -> {
+                        final ByteBuffer buffer = bufferFinder.apply(ref);
+                        final int offset = offsetFinder.applyAsInt(ref);
+                        return ByteBufferUtil.compare(buffer,
+                            offset + VARSIZE_BEGINS + (0x7f & buffer.get(offset + ENDPOS_CONTENT - Byte.BYTES)),
+                            offset + VARSIZE_BEGINS + buffer.getInt(offset + ENDPOS_CONTENT),
+                            tempBuffer, 0, tempSize
+                        );
+                    };
+                }
+                default : {
+                    throw new UnsupportedOperationException(
+                        String.format("The column '%s' is either unknown or not of type object.", _id)
                     );
-                };
+                }
+            }
+        } else {
+            final String _colName = colId.getColumnId();
+            switch (_colName) {
+                case "Create_date" : {
+                    final long operand = ((Timestamp) value).getTime();
+                    return ref -> {
+                        final ByteBuffer buffer = bufferFinder.apply(ref);
+                        final int offset = offsetFinder.applyAsInt(ref);
+                        final int endPos = buffer.get(offset + ENDPOS_CREATE_DATE);
+                        if (endPos < 0) return 1;
+                        else return Long.compare(
+                            buffer.getLong(offset + VARSIZE_BEGINS + endPos - Long.BYTES),
+                            operand
+                        );
+                    };
+                }
+                case "Content"     : {
+                    final ByteBuffer tempBuffer = ByteBuffer.wrap(((String) value).getBytes());
+                    final int tempSize = tempBuffer.capacity();
+                    return ref -> {
+                        final ByteBuffer buffer = bufferFinder.apply(ref);
+                        final int offset = offsetFinder.applyAsInt(ref);
+                        return ByteBufferUtil.compare(buffer,
+                            offset + VARSIZE_BEGINS + (0x7f & buffer.get(offset + ENDPOS_CONTENT - Byte.BYTES)),
+                            offset + VARSIZE_BEGINS + buffer.getInt(offset + ENDPOS_CONTENT),
+                            tempBuffer, 0, tempSize
+                        );
+                    };
+                }
+                default : {
+                    throw new UnsupportedOperationException(
+                        String.format("The column '%s' is either unknown or not of type object.", _colName)
+                    );
+                }
             }
         }
-        
-        throw new UnsupportedOperationException(
-            String.format("The column '%s' is either unknown or not of type object.", colId.getColumnId())
-        );
     }
     
     @Override
@@ -839,23 +1098,33 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         if (colId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
             switch (_id) {
-                case ID       : return ALWAYS_LESS;
-                case MOVIE_ID : return ref -> {
+                case ID          : return ALWAYS_LESS;
+                case MOVIE_ID    : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.get(offset + ENDPOS_MOVIE_ID) < 0 ? 0 : -1;
                 };
-                case TAG      : return ref -> {
+                case TAG         : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.get(offset + ENDPOS_TAG) < 0 ? 0 : -1;
                 };
-                case USER_ID  : return ref -> {
+                case USER_ID     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.get(offset + ENDPOS_USER_ID) < 0 ? 0 : -1;
                 };
-                case CONTENT  : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) < 0 ? 0 : -1;
+                case RATING      : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return buffer.get(offset + ENDPOS_RATING) < 0 ? 0 : -1;
+                };
+                case CREATE_DATE : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return buffer.get(offset + ENDPOS_CREATE_DATE) < 0 ? 0 : -1;
+                };
+                case CONTENT     : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) < 0 ? 0 : -1;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown enum constant '%s'.", _id)
@@ -865,23 +1134,33 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
-                case "ID"       : return ALWAYS_LESS;
-                case "Movie_id" : return ref -> {
+                case "ID"          : return ALWAYS_LESS;
+                case "Movie_id"    : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.get(offset + ENDPOS_MOVIE_ID) < 0 ? 0 : -1;
                 };
-                case "Tag"      : return ref -> {
+                case "Tag"         : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.get(offset + ENDPOS_TAG) < 0 ? 0 : -1;
                 };
-                case "User_id"  : return ref -> {
+                case "User_id"     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.get(offset + ENDPOS_USER_ID) < 0 ? 0 : -1;
                 };
-                case "Content"  : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) < 0 ? 0 : -1;
+                case "Rating"      : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return buffer.get(offset + ENDPOS_RATING) < 0 ? 0 : -1;
+                };
+                case "Create_date" : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return buffer.get(offset + ENDPOS_CREATE_DATE) < 0 ? 0 : -1;
+                };
+                case "Content"     : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CONTENT) < 0 ? 0 : -1;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown column name '%s'.", _colName)
@@ -896,13 +1175,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         if (colId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
             switch (_id) {
-                case ID       : return ref -> {
+                case ID          : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     final int begins = rowOffset + FIELD_ID;
                     return predicate.test(buffer, begins, begins + Integer.BYTES);
                 };
-                case MOVIE_ID : return ref -> {
+                case MOVIE_ID    : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return predicate.test(buffer,
@@ -910,7 +1189,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_MOVIE_ID)
                     );
                 };
-                case TAG      : return ref -> {
+                case TAG         : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return predicate.test(buffer,
@@ -918,7 +1197,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_TAG)
                     );
                 };
-                case USER_ID  : return ref -> {
+                case USER_ID     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return predicate.test(buffer,
@@ -926,7 +1205,23 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_USER_ID)
                     );
                 };
-                case CONTENT  : return ref -> {
+                case RATING      : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return predicate.test(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_RATING - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_RATING)
+                    );
+                };
+                case CREATE_DATE : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return predicate.test(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_CREATE_DATE - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CREATE_DATE)
+                    );
+                };
+                case CONTENT     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return predicate.test(buffer,
@@ -943,13 +1238,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
-                case "ID"       : return ref -> {
+                case "ID"          : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     final int begins = rowOffset + FIELD_ID;
                     return predicate.test(buffer, begins, begins + Integer.BYTES);
                 };
-                case "Movie_id" : return ref -> {
+                case "Movie_id"    : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return predicate.test(buffer,
@@ -957,7 +1252,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_MOVIE_ID)
                     );
                 };
-                case "Tag"      : return ref -> {
+                case "Tag"         : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return predicate.test(buffer,
@@ -965,7 +1260,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_TAG)
                     );
                 };
-                case "User_id"  : return ref -> {
+                case "User_id"     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return predicate.test(buffer,
@@ -973,7 +1268,23 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_USER_ID)
                     );
                 };
-                case "Content"  : return ref -> {
+                case "Rating"      : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return predicate.test(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_RATING - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_RATING)
+                    );
+                };
+                case "Create_date" : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return predicate.test(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_CREATE_DATE - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CREATE_DATE)
+                    );
+                };
+                case "Content"     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return predicate.test(buffer,
@@ -995,13 +1306,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         if (colId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
             switch (_id) {
-                case ID       : return ref -> {
+                case ID          : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     final int begins = rowOffset + FIELD_ID;
                     return compareTo.compare(buffer, begins, begins + Integer.BYTES);
                 };
-                case MOVIE_ID : return ref -> {
+                case MOVIE_ID    : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return compareTo.compare(buffer,
@@ -1009,7 +1320,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_MOVIE_ID)
                     );
                 };
-                case TAG      : return ref -> {
+                case TAG         : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return compareTo.compare(buffer,
@@ -1017,7 +1328,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_TAG)
                     );
                 };
-                case USER_ID  : return ref -> {
+                case USER_ID     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return compareTo.compare(buffer,
@@ -1025,7 +1336,23 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_USER_ID)
                     );
                 };
-                case CONTENT  : return ref -> {
+                case RATING      : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return compareTo.compare(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_RATING - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_RATING)
+                    );
+                };
+                case CREATE_DATE : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return compareTo.compare(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_CREATE_DATE - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CREATE_DATE)
+                    );
+                };
+                case CONTENT     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return compareTo.compare(buffer,
@@ -1042,13 +1369,13 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
-                case "ID"       : return ref -> {
+                case "ID"          : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     final int begins = rowOffset + FIELD_ID;
                     return compareTo.compare(buffer, begins, begins + Integer.BYTES);
                 };
-                case "Movie_id" : return ref -> {
+                case "Movie_id"    : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return compareTo.compare(buffer,
@@ -1056,7 +1383,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_MOVIE_ID)
                     );
                 };
-                case "Tag"      : return ref -> {
+                case "Tag"         : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return compareTo.compare(buffer,
@@ -1064,7 +1391,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_TAG)
                     );
                 };
-                case "User_id"  : return ref -> {
+                case "User_id"     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return compareTo.compare(buffer,
@@ -1072,7 +1399,23 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_USER_ID)
                     );
                 };
-                case "Content"  : return ref -> {
+                case "Rating"      : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return compareTo.compare(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_RATING - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_RATING)
+                    );
+                };
+                case "Create_date" : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return compareTo.compare(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_CREATE_DATE - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CREATE_DATE)
+                    );
+                };
+                case "Content"     : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
                     return compareTo.compare(buffer,
@@ -1094,7 +1437,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         if (colId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) colId;
             switch (_id) {
-                case ID       : return (aRef, bRef) -> {
+                case ID          : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);
@@ -1106,7 +1449,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuffer, bBegins, bBegins + Integer.BYTES
                     );
                 };
-                case MOVIE_ID : return (aRef, bRef) -> {
+                case MOVIE_ID    : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);
@@ -1116,7 +1459,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuffer, bRowOffset + VARSIZE_BEGINS, bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_MOVIE_ID)
                     );
                 };
-                case TAG      : return (aRef, bRef) -> {
+                case TAG         : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);
@@ -1126,7 +1469,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_TAG - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_TAG)
                     );
                 };
-                case USER_ID  : return (aRef, bRef) -> {
+                case USER_ID     : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);
@@ -1136,7 +1479,27 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_USER_ID - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_USER_ID)
                     );
                 };
-                case CONTENT  : return (aRef, bRef) -> {
+                case RATING      : return (aRef, bRef) -> {
+                    final ByteBuffer aBuffer = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuffer = bufferFinder.apply(bRef);
+                    final int aRowOffset = offsetFinder.applyAsInt(aRef);
+                    final int bRowOffset = offsetFinder.applyAsInt(bRef);
+                    return comparator.compare(
+                        aBuffer, aRowOffset + VARSIZE_BEGINS + (0x7f & aBuffer.get(aRowOffset + ENDPOS_RATING - Byte.BYTES)), aRowOffset + VARSIZE_BEGINS + aBuffer.get(aRowOffset + ENDPOS_RATING), 
+                        bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_RATING - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_RATING)
+                    );
+                };
+                case CREATE_DATE : return (aRef, bRef) -> {
+                    final ByteBuffer aBuffer = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuffer = bufferFinder.apply(bRef);
+                    final int aRowOffset = offsetFinder.applyAsInt(aRef);
+                    final int bRowOffset = offsetFinder.applyAsInt(bRef);
+                    return comparator.compare(
+                        aBuffer, aRowOffset + VARSIZE_BEGINS + (0x7f & aBuffer.get(aRowOffset + ENDPOS_CREATE_DATE - Byte.BYTES)), aRowOffset + VARSIZE_BEGINS + aBuffer.get(aRowOffset + ENDPOS_CREATE_DATE), 
+                        bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_CREATE_DATE - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_CREATE_DATE)
+                    );
+                };
+                case CONTENT     : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);
@@ -1155,7 +1518,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
-                case "ID"       : return (aRef, bRef) -> {
+                case "ID"          : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);
@@ -1167,7 +1530,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuffer, bBegins, bBegins + Integer.BYTES
                     );
                 };
-                case "Movie_id" : return (aRef, bRef) -> {
+                case "Movie_id"    : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);
@@ -1177,7 +1540,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuffer, bRowOffset + VARSIZE_BEGINS, bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_MOVIE_ID)
                     );
                 };
-                case "Tag"      : return (aRef, bRef) -> {
+                case "Tag"         : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);
@@ -1187,7 +1550,7 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_TAG - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_TAG)
                     );
                 };
-                case "User_id"  : return (aRef, bRef) -> {
+                case "User_id"     : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);
@@ -1197,7 +1560,27 @@ public abstract class GeneratedMovieReviewEntityStoreSerializerImpl implements E
                         bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_USER_ID - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_USER_ID)
                     );
                 };
-                case "Content"  : return (aRef, bRef) -> {
+                case "Rating"      : return (aRef, bRef) -> {
+                    final ByteBuffer aBuffer = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuffer = bufferFinder.apply(bRef);
+                    final int aRowOffset = offsetFinder.applyAsInt(aRef);
+                    final int bRowOffset = offsetFinder.applyAsInt(bRef);
+                    return comparator.compare(
+                        aBuffer, aRowOffset + VARSIZE_BEGINS + (0x7f & aBuffer.get(aRowOffset + ENDPOS_RATING - Byte.BYTES)), aRowOffset + VARSIZE_BEGINS + aBuffer.get(aRowOffset + ENDPOS_RATING), 
+                        bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_RATING - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_RATING)
+                    );
+                };
+                case "Create_date" : return (aRef, bRef) -> {
+                    final ByteBuffer aBuffer = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuffer = bufferFinder.apply(bRef);
+                    final int aRowOffset = offsetFinder.applyAsInt(aRef);
+                    final int bRowOffset = offsetFinder.applyAsInt(bRef);
+                    return comparator.compare(
+                        aBuffer, aRowOffset + VARSIZE_BEGINS + (0x7f & aBuffer.get(aRowOffset + ENDPOS_CREATE_DATE - Byte.BYTES)), aRowOffset + VARSIZE_BEGINS + aBuffer.get(aRowOffset + ENDPOS_CREATE_DATE), 
+                        bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_CREATE_DATE - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_CREATE_DATE)
+                    );
+                };
+                case "Content"     : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
                     final int aRowOffset = offsetFinder.applyAsInt(aRef);

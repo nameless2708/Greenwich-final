@@ -8,6 +8,7 @@ import com.speedment.common.tuple.Tuple2;
 import com.speedment.common.tuple.Tuples;
 import com.speedment.enterprise.datastore.runtime.entitystore.EntityStore;
 import com.speedment.enterprise.datastore.runtime.entitystore.EntityStoreHolder;
+import com.speedment.enterprise.datastore.runtime.fieldcache.FieldCache.OfComparable;
 import com.speedment.enterprise.datastore.runtime.fieldcache.FieldCache.OfInt;
 import com.speedment.enterprise.datastore.runtime.fieldcache.FieldCache.OfString;
 import com.speedment.enterprise.datastore.runtime.fieldcache.FieldCache;
@@ -25,6 +26,7 @@ import com.speedment.runtime.core.component.StreamSupplierComponent;
 import com.speedment.runtime.field.Field;
 import com.speedment.runtime.field.trait.HasIdentifier;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -59,6 +61,8 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
     private final OfString fieldContentCache;
     private final OfInt fieldTagCache;
     private final OfInt fieldUserIdCache;
+    private final OfComparable<Timestamp> fieldCreateDateCache;
+    private final OfInt fieldRatingCache;
     
     public GeneratedMovieReviewCacheHolder(
             EntityStore<MovieReview> entityStore,
@@ -66,14 +70,18 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
             OfInt fieldMovieIdCache,
             OfString fieldContentCache,
             OfInt fieldTagCache,
-            OfInt fieldUserIdCache) {
+            OfInt fieldUserIdCache,
+            OfComparable<Timestamp> fieldCreateDateCache,
+            OfInt fieldRatingCache) {
         
-        this.entityStore       = requireNonNull(entityStore);
-        this.fieldIdCache      = requireNonNull(fieldIdCache);
-        this.fieldMovieIdCache = requireNonNull(fieldMovieIdCache);
-        this.fieldContentCache = requireNonNull(fieldContentCache);
-        this.fieldTagCache     = requireNonNull(fieldTagCache);
-        this.fieldUserIdCache  = requireNonNull(fieldUserIdCache);
+        this.entityStore          = requireNonNull(entityStore);
+        this.fieldIdCache         = requireNonNull(fieldIdCache);
+        this.fieldMovieIdCache    = requireNonNull(fieldMovieIdCache);
+        this.fieldContentCache    = requireNonNull(fieldContentCache);
+        this.fieldTagCache        = requireNonNull(fieldTagCache);
+        this.fieldUserIdCache     = requireNonNull(fieldUserIdCache);
+        this.fieldCreateDateCache = requireNonNull(fieldCreateDateCache);
+        this.fieldRatingCache     = requireNonNull(fieldRatingCache);
     }
     
     @Override
@@ -87,11 +95,13 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
         if (columnId instanceof MovieReview.Identifier) {
             final MovieReview.Identifier _id = (MovieReview.Identifier) columnId;
             switch (_id) {
-                case ID       : return (CACHE) fieldIdCache;
-                case MOVIE_ID : return (CACHE) fieldMovieIdCache;
-                case CONTENT  : return (CACHE) fieldContentCache;
-                case TAG      : return (CACHE) fieldTagCache;
-                case USER_ID  : return (CACHE) fieldUserIdCache;
+                case ID          : return (CACHE) fieldIdCache;
+                case MOVIE_ID    : return (CACHE) fieldMovieIdCache;
+                case CONTENT     : return (CACHE) fieldContentCache;
+                case TAG         : return (CACHE) fieldTagCache;
+                case USER_ID     : return (CACHE) fieldUserIdCache;
+                case CREATE_DATE : return (CACHE) fieldCreateDateCache;
+                case RATING      : return (CACHE) fieldRatingCache;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown enum constant '%s'.", _id)
@@ -101,11 +111,13 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
         } else {
             final String _colName = columnId.getColumnId();
             switch (_colName) {
-                case "ID"       : return (CACHE) fieldIdCache;
-                case "Movie_id" : return (CACHE) fieldMovieIdCache;
-                case "Content"  : return (CACHE) fieldContentCache;
-                case "Tag"      : return (CACHE) fieldTagCache;
-                case "User_id"  : return (CACHE) fieldUserIdCache;
+                case "ID"          : return (CACHE) fieldIdCache;
+                case "Movie_id"    : return (CACHE) fieldMovieIdCache;
+                case "Content"     : return (CACHE) fieldContentCache;
+                case "Tag"         : return (CACHE) fieldTagCache;
+                case "User_id"     : return (CACHE) fieldUserIdCache;
+                case "Create_date" : return (CACHE) fieldCreateDateCache;
+                case "Rating"      : return (CACHE) fieldRatingCache;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown column name '%s'.", _colName)
@@ -147,11 +159,13 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
     private EntityStoreHolder<MovieReview> wrapped() {
         // Use explicit type for Stream to improve compilation time.
         final Map<ColumnLabel, FieldCache<?>> fieldCaches = Stream.<Tuple2<HasIdentifier<MovieReview>, FieldCache<?>>>of(
-            Tuples.of(MovieReview.ID,      fieldIdCache),
-            Tuples.of(MovieReview.MOVIE_ID,fieldMovieIdCache),
-            Tuples.of(MovieReview.CONTENT, fieldContentCache),
-            Tuples.of(MovieReview.TAG,     fieldTagCache),
-            Tuples.of(MovieReview.USER_ID, fieldUserIdCache)
+            Tuples.of(MovieReview.ID,         fieldIdCache),
+            Tuples.of(MovieReview.MOVIE_ID,   fieldMovieIdCache),
+            Tuples.of(MovieReview.CONTENT,    fieldContentCache),
+            Tuples.of(MovieReview.TAG,        fieldTagCache),
+            Tuples.of(MovieReview.USER_ID,    fieldUserIdCache),
+            Tuples.of(MovieReview.CREATE_DATE,fieldCreateDateCache),
+            Tuples.of(MovieReview.RATING,     fieldRatingCache)
         )
             .collect(toMap(t2 -> t2.get0().identifier().label(), Tuple2::get1));
         final Map<ColumnLabel,  Map<ColumnLabel, MultiFieldCache<?, ?, ?>>>  multiFieldCaches = createMultiCacheMap();
@@ -160,7 +174,9 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
             MovieReview.MOVIE_ID,
             MovieReview.CONTENT,
             MovieReview.TAG,
-            MovieReview.USER_ID
+            MovieReview.USER_ID,
+            MovieReview.CREATE_DATE,
+            MovieReview.RATING
         )
             .map(HasIdentifier::identifier)
             .collect(toSet());
@@ -188,6 +204,12 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
         final CompletableFuture<FieldCache.OfInt> fieldUserIdCacheFuture =
             DataStoreHolderUtil.buildIntCache(entityStoreFuture, executor, MovieReview.USER_ID, 0);
         
+        final CompletableFuture<FieldCache.OfComparable<Timestamp>> fieldCreateDateCacheFuture =
+            DataStoreHolderUtil.buildComparableCache(entityStoreFuture, executor, MovieReview.CREATE_DATE, 0);
+        
+        final CompletableFuture<FieldCache.OfInt> fieldRatingCacheFuture =
+            DataStoreHolderUtil.buildIntCache(entityStoreFuture, executor, MovieReview.RATING, 0);
+        
         return entityStoreFuture.thenApplyAsync(entityStore -> {
             try {
                 return new GeneratedMovieReviewCacheHolder(
@@ -196,7 +218,9 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
                     fieldMovieIdCacheFuture.get(),
                     fieldContentCacheFuture.get(),
                     fieldTagCacheFuture.get(),
-                    fieldUserIdCacheFuture.get()
+                    fieldUserIdCacheFuture.get(),
+                    fieldCreateDateCacheFuture.get(),
+                    fieldRatingCacheFuture.get()
                 );
             } catch (final ExecutionException | InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -212,6 +236,8 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
         fieldContentCache.close();
         fieldTagCache.close();
         fieldUserIdCache.close();
+        fieldCreateDateCache.close();
+        fieldRatingCache.close();
     }
     
     @Override
@@ -224,7 +250,9 @@ public final class GeneratedMovieReviewCacheHolder implements EntityStoreHolder<
                 MovieReview.Identifier.MOVIE_ID,
                 MovieReview.Identifier.CONTENT,
                 MovieReview.Identifier.TAG,
-                MovieReview.Identifier.USER_ID
+                MovieReview.Identifier.USER_ID,
+                MovieReview.Identifier.CREATE_DATE,
+                MovieReview.Identifier.RATING
             )
         
         );

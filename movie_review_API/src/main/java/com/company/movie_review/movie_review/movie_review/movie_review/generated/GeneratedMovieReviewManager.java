@@ -30,7 +30,9 @@ public interface GeneratedMovieReviewManager extends Manager<MovieReview> {
         MovieReview.MOVIE_ID,
         MovieReview.CONTENT,
         MovieReview.TAG,
-        MovieReview.USER_ID
+        MovieReview.USER_ID,
+        MovieReview.CREATE_DATE,
+        MovieReview.RATING
     ));
     
     @Override

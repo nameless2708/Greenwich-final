@@ -244,15 +244,24 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                    \"name\" : \"Cast_description\",",
             "                    \"nullable\" : true,",
             "                    \"ordinalPosition\" : 5",
-            "                  }",
-            "                ],",
-            "                \"enabled\" : true,",
-            "                \"expanded\" : true,"
+            "                  },",
+            "                  {",
+            "                    \"databaseType\" : \"java.sql.Date\",",
+            "                    \"enabled\" : true,"
         ).forEachOrdered(sb::append);
     }
     
     private static void initPart2(StringBuilder sb) {
         Stream.of(
+            "                    \"expanded\" : true,",
+            "                    \"id\" : \"Cast_birthday\",",
+            "                    \"name\" : \"Cast_birthday\",",
+            "                    \"nullable\" : true,",
+            "                    \"ordinalPosition\" : 6",
+            "                  }",
+            "                ],",
+            "                \"enabled\" : true,",
+            "                \"expanded\" : true,",
             "                \"foreignKeys\" : [",
             "                  {",
             "                    \"enabled\" : false,",
@@ -344,7 +353,12 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                    \"ordinalPosition\" : 3",
             "                  },",
             "                  {",
-            "                    \"databaseType\" : \"java.lang.String\",",
+            "                    \"databaseType\" : \"java.lang.String\","
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart3(StringBuilder sb) {
+        Stream.of(
             "                    \"enabled\" : true,",
             "                    \"expanded\" : true,",
             "                    \"id\" : \"Role_name\",",
@@ -353,12 +367,7 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                    \"ordinalPosition\" : 4",
             "                  }",
             "                ],",
-            "                \"enabled\" : true,"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart3(StringBuilder sb) {
-        Stream.of(
+            "                \"enabled\" : true,",
             "                \"expanded\" : true,",
             "                \"id\" : \"movie_cast\",",
             "                \"indexes\" : [",
@@ -450,16 +459,7 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                    \"id\" : \"Content\",",
             "                    \"name\" : \"Content\",",
             "                    \"nullable\" : true,",
-            "                    \"ordinalPosition\" : 3",
-            "                  },",
-            "                  {",
-            "                    \"databaseType\" : \"java.lang.Integer\",",
-            "                    \"enabled\" : true,",
-            "                    \"expanded\" : true,",
-            "                    \"id\" : \"Tag\",",
-            "                    \"name\" : \"Tag\",",
-            "                    \"nullable\" : true,",
-            "                    \"ordinalPosition\" : 4"
+            "                    \"ordinalPosition\" : 3"
         ).forEachOrdered(sb::append);
     }
     
@@ -470,10 +470,35 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                    \"databaseType\" : \"java.lang.Integer\",",
             "                    \"enabled\" : true,",
             "                    \"expanded\" : true,",
+            "                    \"id\" : \"Tag\",",
+            "                    \"name\" : \"Tag\",",
+            "                    \"nullable\" : true,",
+            "                    \"ordinalPosition\" : 4",
+            "                  },",
+            "                  {",
+            "                    \"databaseType\" : \"java.lang.Integer\",",
+            "                    \"enabled\" : true,",
+            "                    \"expanded\" : true,",
             "                    \"id\" : \"User_id\",",
             "                    \"name\" : \"User_id\",",
             "                    \"nullable\" : true,",
             "                    \"ordinalPosition\" : 5",
+            "                  },",
+            "                  {",
+            "                    \"databaseType\" : \"java.sql.Timestamp\",",
+            "                    \"expanded\" : true,",
+            "                    \"id\" : \"Create_date\",",
+            "                    \"name\" : \"Create_date\",",
+            "                    \"nullable\" : true,",
+            "                    \"ordinalPosition\" : 6",
+            "                  },",
+            "                  {",
+            "                    \"databaseType\" : \"java.lang.Integer\",",
+            "                    \"expanded\" : true,",
+            "                    \"id\" : \"Rating\",",
+            "                    \"name\" : \"Rating\",",
+            "                    \"nullable\" : true,",
+            "                    \"ordinalPosition\" : 7",
             "                  }",
             "                ],",
             "                \"enabled\" : true,",
@@ -540,7 +565,12 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                  },",
             "                  {",
             "                    \"autoIncrement\" : false,",
-            "                    \"biDirectional\" : false,",
+            "                    \"biDirectional\" : false,"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart5(StringBuilder sb) {
+        Stream.of(
             "                    \"databaseType\" : \"java.lang.String\",",
             "                    \"enabled\" : true,",
             "                    \"expanded\" : true,",
@@ -565,12 +595,7 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                    \"id\" : \"original_title\",",
             "                    \"lowCardinality\" : false,",
             "                    \"name\" : \"original_title\",",
-            "                    \"nameProtected\" : true,"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart5(StringBuilder sb) {
-        Stream.of(
+            "                    \"nameProtected\" : true,",
             "                    \"nullable\" : true,",
             "                    \"nullableImplementation\" : \"OPTIONAL\",",
             "                    \"ordinalPosition\" : 3,",
@@ -646,7 +671,12 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                  {",
             "                    \"enabled\" : true,",
             "                    \"expanded\" : false,",
-            "                    \"id\" : \"PRIMARY\",",
+            "                    \"id\" : \"PRIMARY\","
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart6(StringBuilder sb) {
+        Stream.of(
             "                    \"indexColumns\" : [",
             "                      {",
             "                        \"expanded\" : true,",
@@ -671,12 +701,7 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                    \"name\" : \"ID\",",
             "                    \"ordinalPosition\" : 1",
             "                  }",
-            "                ],"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart6(StringBuilder sb) {
-        Stream.of(
+            "                ],",
             "                \"restCors\" : \"*\",",
             "                \"restEnableFilters\" : true,",
             "                \"restEnableSkipLimit\" : true,",
@@ -752,7 +777,12 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                  {",
             "                    \"databaseType\" : \"java.lang.String\",",
             "                    \"enabled\" : true,",
-            "                    \"expanded\" : true,",
+            "                    \"expanded\" : true,"
+        ).forEachOrdered(sb::append);
+    }
+    
+    private static void initPart7(StringBuilder sb) {
+        Stream.of(
             "                    \"id\" : \"Address\",",
             "                    \"name\" : \"Address\",",
             "                    \"nullable\" : true,",
@@ -777,12 +807,7 @@ public class GeneratedMovieReviewMetadata extends AbstractApplicationMetadata {
             "                      }",
             "                    ],",
             "                    \"name\" : \"PRIMARY\",",
-            "                    \"unique\" : true"
-        ).forEachOrdered(sb::append);
-    }
-    
-    private static void initPart7(StringBuilder sb) {
-        Stream.of(
+            "                    \"unique\" : true",
             "                  }",
             "                ],",
             "                \"isView\" : false,",

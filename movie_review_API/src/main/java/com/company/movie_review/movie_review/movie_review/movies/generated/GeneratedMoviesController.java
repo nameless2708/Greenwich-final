@@ -7,17 +7,11 @@ import com.company.movie_review.movie_review.movie_review.cast.Cast;
 import com.company.movie_review.movie_review.movie_review.cast.CastManager;
 import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCast;
 import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCastManager;
-import com.company.movie_review.movie_review.movie_review.movie_review.MovieReview;
-import com.company.movie_review.movie_review.movie_review.movie_review.MovieReviewImpl;
-import com.company.movie_review.movie_review.movie_review.movie_review.MovieReviewManager;
 import com.company.movie_review.movie_review.movie_review.movies.Movies;
 import com.company.movie_review.movie_review.movie_review.movies.MoviesManager;
 import com.company.movie_review.movie_review.movie_review.movies.generated.GeneratedMovies.Identifier;
 import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.common.json.Json;
-import com.speedment.common.tuple.Tuple2;
-import com.speedment.common.tuple.Tuple3;
-import com.speedment.common.tuple.Tuples;
 import com.speedment.enterprise.plugins.json.JsonCollectors;
 import com.speedment.enterprise.plugins.json.JsonComponent;
 import com.speedment.enterprise.plugins.json.JsonEncoder;
@@ -25,15 +19,15 @@ import com.speedment.enterprise.plugins.spring.runtime.AbstractFilter;
 import com.speedment.enterprise.plugins.spring.runtime.AbstractSort;
 import com.speedment.enterprise.plugins.spring.runtime.ControllerUtil;
 import com.speedment.runtime.field.Field;
-import com.speedment.runtime.join.Join;
-import com.speedment.runtime.join.JoinComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
@@ -85,7 +79,7 @@ public abstract class GeneratedMoviesController {
             movieDetail.setMovies(movieObj);
             List<MovieCast> movieCastObj = movie_cast.stream().filter(MovieCast.MOVIE_ID.equal(id)).collect(toList());
             movieDetail.setMovie_cast(movieCastObj);
-            List<Integer> movieCastIds = new ArrayList<Integer>();
+            List<Integer> movieCastIds = new ArrayList<>();
             movieCastObj.stream().forEach(element -> {
                 movieCastIds.add(element.getId());
             });
@@ -97,8 +91,7 @@ public abstract class GeneratedMoviesController {
             return null;
         }
     }
-
-    @CrossOrigin
+    
     @GetMapping(path = "/movies", produces = "application/json")
     public String get(
             @RequestParam(name = "filter", defaultValue = "[]") String filters,

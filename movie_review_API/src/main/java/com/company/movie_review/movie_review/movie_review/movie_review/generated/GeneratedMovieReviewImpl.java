@@ -4,6 +4,7 @@ import com.company.movie_review.movie_review.movie_review.movie_review.MovieRevi
 import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -26,6 +27,8 @@ public abstract class GeneratedMovieReviewImpl implements MovieReview {
     private String content;
     private Integer tag;
     private Integer userId;
+    private Timestamp createDate;
+    private Integer rating;
     
     protected GeneratedMovieReviewImpl() {}
     
@@ -52,6 +55,16 @@ public abstract class GeneratedMovieReviewImpl implements MovieReview {
     @Override
     public OptionalInt getUserId() {
         return OptionalUtil.ofNullable(userId);
+    }
+    
+    @Override
+    public Optional<Timestamp> getCreateDate() {
+        return Optional.ofNullable(createDate);
+    }
+    
+    @Override
+    public OptionalInt getRating() {
+        return OptionalUtil.ofNullable(rating);
     }
     
     @Override
@@ -85,13 +98,27 @@ public abstract class GeneratedMovieReviewImpl implements MovieReview {
     }
     
     @Override
+    public MovieReview setCreateDate(Timestamp createDate) {
+        this.createDate = createDate;
+        return this;
+    }
+    
+    @Override
+    public MovieReview setRating(Integer rating) {
+        this.rating = rating;
+        return this;
+    }
+    
+    @Override
     public String toString() {
         final StringJoiner sj = new StringJoiner(", ", "{ ", " }");
-        sj.add("id = "      + Objects.toString(getId()));
-        sj.add("movieId = " + Objects.toString(OptionalUtil.unwrap(getMovieId())));
-        sj.add("content = " + Objects.toString(OptionalUtil.unwrap(getContent())));
-        sj.add("tag = "     + Objects.toString(OptionalUtil.unwrap(getTag())));
-        sj.add("userId = "  + Objects.toString(OptionalUtil.unwrap(getUserId())));
+        sj.add("id = "         + Objects.toString(getId()));
+        sj.add("movieId = "    + Objects.toString(OptionalUtil.unwrap(getMovieId())));
+        sj.add("content = "    + Objects.toString(OptionalUtil.unwrap(getContent())));
+        sj.add("tag = "        + Objects.toString(OptionalUtil.unwrap(getTag())));
+        sj.add("userId = "     + Objects.toString(OptionalUtil.unwrap(getUserId())));
+        sj.add("createDate = " + Objects.toString(OptionalUtil.unwrap(getCreateDate())));
+        sj.add("rating = "     + Objects.toString(OptionalUtil.unwrap(getRating())));
         return "MovieReviewImpl " + sj.toString();
     }
     
@@ -105,6 +132,8 @@ public abstract class GeneratedMovieReviewImpl implements MovieReview {
         if (!Objects.equals(this.getContent(), thatMovieReview.getContent())) { return false; }
         if (!Objects.equals(this.getTag(), thatMovieReview.getTag())) { return false; }
         if (!Objects.equals(this.getUserId(), thatMovieReview.getUserId())) { return false; }
+        if (!Objects.equals(this.getCreateDate(), thatMovieReview.getCreateDate())) { return false; }
+        if (!Objects.equals(this.getRating(), thatMovieReview.getRating())) { return false; }
         return true;
     }
     
@@ -116,6 +145,8 @@ public abstract class GeneratedMovieReviewImpl implements MovieReview {
         hash = 31 * hash + Objects.hashCode(OptionalUtil.unwrap(getContent()));
         hash = 31 * hash + Objects.hashCode(OptionalUtil.unwrap(getTag()));
         hash = 31 * hash + Objects.hashCode(OptionalUtil.unwrap(getUserId()));
+        hash = 31 * hash + Objects.hashCode(OptionalUtil.unwrap(getCreateDate()));
+        hash = 31 * hash + Objects.hashCode(OptionalUtil.unwrap(getRating()));
         return hash;
     }
 }

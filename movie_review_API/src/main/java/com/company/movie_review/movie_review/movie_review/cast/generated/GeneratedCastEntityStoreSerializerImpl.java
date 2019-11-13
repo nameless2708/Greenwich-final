@@ -22,6 +22,7 @@ import com.speedment.enterprise.datastore.runtime.util.Utf8Util;
 import com.speedment.runtime.config.identifier.ColumnIdentifier;
 
 import java.nio.ByteBuffer;
+import java.sql.Date;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.LongConsumer;
@@ -49,10 +50,11 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
     private final LongToIntFunction offsetFinder;
     private final static int FIELD_ID = 0;
     private final static int ENDPOS_CAST_GENDER = 4;
-    private final static int ENDPOS_CAST_NAME = 5;
-    private final static int ENDPOS_CAST_IMAGE = 9;
-    private final static int ENDPOS_CAST_DESCRIPTION = 13;
-    private final static int VARSIZE_BEGINS = 17;
+    private final static int ENDPOS_CAST_BIRTHDAY = 5;
+    private final static int ENDPOS_CAST_NAME = 6;
+    private final static int ENDPOS_CAST_IMAGE = 10;
+    private final static int ENDPOS_CAST_DESCRIPTION = 14;
+    private final static int VARSIZE_BEGINS = 18;
     
     protected GeneratedCastEntityStoreSerializerImpl(final LongFunction<ByteBuffer> bufferFinder, final LongToIntFunction offsetFinder) {
         this.bufferFinder = requireNonNull(bufferFinder);
@@ -70,6 +72,13 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                 buffer.put(ENDPOS_CAST_GENDER, (byte) varSizePos);
             } else {
                 buffer.put(ENDPOS_CAST_GENDER, (byte) (0x80 | varSizePos));
+            }
+            if (entity.getCastBirthday().isPresent()) {
+                buffer.putLong(VARSIZE_BEGINS + varSizePos, entity.getCastBirthday().get().getTime());
+                varSizePos += Long.BYTES;
+                buffer.put(ENDPOS_CAST_BIRTHDAY, (byte) varSizePos);
+            } else {
+                buffer.put(ENDPOS_CAST_BIRTHDAY, (byte) (0x80 | varSizePos));
             }
             if (entity.getCastName().isPresent()) {
                 varSizePos += ByteBufferUtil.putArrayAbsolute(buffer, VARSIZE_BEGINS + varSizePos, entity.getCastName().get().getBytes());
@@ -142,6 +151,9 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     throw new DeserializationException(buffer, offset, sizeOf.applyAsInt(ref), ex);
                 }
             }
+            if (buffer.get(offset + ENDPOS_CAST_BIRTHDAY) >= 0) {
+                entity.setCastBirthday(new Date(buffer.getLong(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_CAST_BIRTHDAY) - Long.BYTES)));
+            }
             return entity;
         };
     }
@@ -153,6 +165,7 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
             switch (_id) {
                 case ID               : 
                 case CAST_GENDER      : return int.class;
+                case CAST_BIRTHDAY    : return Date.class;
                 case CAST_NAME        : 
                 case CAST_IMAGE       : 
                 case CAST_DESCRIPTION : return String.class;
@@ -167,6 +180,7 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
             switch (_colName) {
                 case "ID"               : 
                 case "Cast_gender"      : return int.class;
+                case "Cast_birthday"    : return Date.class;
                 case "Cast_name"        : 
                 case "Cast_image"       : 
                 case "Cast_description" : return String.class;
@@ -201,6 +215,7 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
             switch (_id) {
                 case ID               : return ALWAYS_FALSE;
                 case CAST_GENDER      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_GENDER) < 0;
+                case CAST_BIRTHDAY    : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_BIRTHDAY) < 0;
                 case CAST_NAME        : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_NAME) < 0;
                 case CAST_IMAGE       : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_IMAGE) < 0;
                 case CAST_DESCRIPTION : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_DESCRIPTION) < 0;
@@ -215,6 +230,7 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
             switch (_colName) {
                 case "ID"               : return ALWAYS_FALSE;
                 case "Cast_gender"      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_GENDER) < 0;
+                case "Cast_birthday"    : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_BIRTHDAY) < 0;
                 case "Cast_name"        : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_NAME) < 0;
                 case "Cast_image"       : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_IMAGE) < 0;
                 case "Cast_description" : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_DESCRIPTION) < 0;
@@ -234,6 +250,7 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
             switch (_id) {
                 case ID               : return ALWAYS_TRUE;
                 case CAST_GENDER      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_GENDER) >= 0;
+                case CAST_BIRTHDAY    : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_BIRTHDAY) >= 0;
                 case CAST_NAME        : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_NAME) >= 0;
                 case CAST_IMAGE       : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_IMAGE) >= 0;
                 case CAST_DESCRIPTION : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_DESCRIPTION) >= 0;
@@ -248,6 +265,7 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
             switch (_colName) {
                 case "ID"               : return ALWAYS_TRUE;
                 case "Cast_gender"      : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_GENDER) >= 0;
+                case "Cast_birthday"    : return ref -> bufferFinder.apply(ref).get(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_BIRTHDAY) >= 0;
                 case "Cast_name"        : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_NAME) >= 0;
                 case "Cast_image"       : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_IMAGE) >= 0;
                 case "Cast_description" : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_DESCRIPTION) >= 0;
@@ -349,6 +367,11 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
         if (colId instanceof Cast.Identifier) {
             final Cast.Identifier _id = (Cast.Identifier) colId;
             switch (_id) {
+                case CAST_BIRTHDAY    : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return new Date(buffer.getLong(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_CAST_BIRTHDAY) - Long.BYTES));
+                };
                 case CAST_NAME        : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
@@ -397,6 +420,11 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
+                case "Cast_birthday"    : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return new Date(buffer.getLong(offset + VARSIZE_BEGINS + buffer.get(offset + ENDPOS_CAST_BIRTHDAY) - Long.BYTES));
+                };
                 case "Cast_name"        : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
@@ -464,6 +492,16 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_CAST_GENDER) - Integer.BYTES)
                     );
                 };
+                case CAST_BIRTHDAY    : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    return Long.compare(
+                        aBuf.getLong(aOffset + VARSIZE_BEGINS + aBuf.get(aOffset + ENDPOS_CAST_BIRTHDAY) - Long.BYTES),
+                        bBuf.getLong(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_CAST_BIRTHDAY) - Long.BYTES)
+                    );
+                };
                 case CAST_NAME        : return (aRef, bRef) -> {
                     final ByteBuffer aBuf = bufferFinder.apply(aRef);
                     final ByteBuffer bBuf = bufferFinder.apply(bRef);
@@ -527,6 +565,16 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     return Integer.compare(
                         aBuf.getInt(aOffset + VARSIZE_BEGINS + aBuf.get(aOffset + ENDPOS_CAST_GENDER) - Integer.BYTES),
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_CAST_GENDER) - Integer.BYTES)
+                    );
+                };
+                case "Cast_birthday"    : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    return Long.compare(
+                        aBuf.getLong(aOffset + VARSIZE_BEGINS + aBuf.get(aOffset + ENDPOS_CAST_BIRTHDAY) - Long.BYTES),
+                        bBuf.getLong(bOffset + VARSIZE_BEGINS + bBuf.get(bOffset + ENDPOS_CAST_BIRTHDAY) - Long.BYTES)
                     );
                 };
                 case "Cast_name"        : return (aRef, bRef) -> {
@@ -602,6 +650,21 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     else return Integer.compare(
                         aBuf.getInt(aOffset + VARSIZE_BEGINS + aEndPos - Integer.BYTES),
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
+                    );
+                };
+                case CAST_BIRTHDAY    : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    final int aEndPos = aBuf.get(aOffset + ENDPOS_CAST_BIRTHDAY);
+                    final int bEndPos = bBuf.get(bOffset + ENDPOS_CAST_BIRTHDAY);
+                    if (aEndPos < 0 && bEndPos < 0) return 0;
+                    else if (aEndPos < 0) return 1;
+                    else if (bEndPos < 0) return -1;
+                    else return Long.compare(
+                        aBuf.getLong(aOffset + VARSIZE_BEGINS + aEndPos - Long.BYTES),
+                        bBuf.getLong(bOffset + VARSIZE_BEGINS + bEndPos - Long.BYTES)
                     );
                 };
                 case CAST_NAME        : return (aRef, bRef) -> {
@@ -681,6 +744,21 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     else return Integer.compare(
                         aBuf.getInt(aOffset + VARSIZE_BEGINS + aEndPos - Integer.BYTES),
                         bBuf.getInt(bOffset + VARSIZE_BEGINS + bEndPos - Integer.BYTES)
+                    );
+                };
+                case "Cast_birthday"    : return (aRef, bRef) -> {
+                    final ByteBuffer aBuf = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuf = bufferFinder.apply(bRef);
+                    final int aOffset = offsetFinder.applyAsInt(aRef);
+                    final int bOffset = offsetFinder.applyAsInt(bRef);
+                    final int aEndPos = aBuf.get(aOffset + ENDPOS_CAST_BIRTHDAY);
+                    final int bEndPos = bBuf.get(bOffset + ENDPOS_CAST_BIRTHDAY);
+                    if (aEndPos < 0 && bEndPos < 0) return 0;
+                    else if (aEndPos < 0) return 1;
+                    else if (bEndPos < 0) return -1;
+                    else return Long.compare(
+                        aBuf.getLong(aOffset + VARSIZE_BEGINS + aEndPos - Long.BYTES),
+                        bBuf.getLong(bOffset + VARSIZE_BEGINS + bEndPos - Long.BYTES)
                     );
                 };
                 case "Cast_name"        : return (aRef, bRef) -> {
@@ -860,6 +938,19 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
         if (colId instanceof Cast.Identifier) {
             final Cast.Identifier _id = (Cast.Identifier) colId;
             switch (_id) {
+                case CAST_BIRTHDAY    : {
+                    final long operand = ((Date) value).getTime();
+                    return ref -> {
+                        final ByteBuffer buffer = bufferFinder.apply(ref);
+                        final int offset = offsetFinder.applyAsInt(ref);
+                        final int endPos = buffer.get(offset + ENDPOS_CAST_BIRTHDAY);
+                        if (endPos < 0) return 1;
+                        else return Long.compare(
+                            buffer.getLong(offset + VARSIZE_BEGINS + endPos - Long.BYTES),
+                            operand
+                        );
+                    };
+                }
                 case CAST_NAME        : {
                     final ByteBuffer tempBuffer = ByteBuffer.wrap(((String) value).getBytes());
                     final int tempSize = tempBuffer.capacity();
@@ -908,6 +999,19 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
         } else {
             final String _colName = colId.getColumnId();
             switch (_colName) {
+                case "Cast_birthday"    : {
+                    final long operand = ((Date) value).getTime();
+                    return ref -> {
+                        final ByteBuffer buffer = bufferFinder.apply(ref);
+                        final int offset = offsetFinder.applyAsInt(ref);
+                        final int endPos = buffer.get(offset + ENDPOS_CAST_BIRTHDAY);
+                        if (endPos < 0) return 1;
+                        else return Long.compare(
+                            buffer.getLong(offset + VARSIZE_BEGINS + endPos - Long.BYTES),
+                            operand
+                        );
+                    };
+                }
                 case "Cast_name"        : {
                     final ByteBuffer tempBuffer = ByteBuffer.wrap(((String) value).getBytes());
                     final int tempSize = tempBuffer.capacity();
@@ -967,6 +1071,11 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.get(offset + ENDPOS_CAST_GENDER) < 0 ? 0 : -1;
                 };
+                case CAST_BIRTHDAY    : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return buffer.get(offset + ENDPOS_CAST_BIRTHDAY) < 0 ? 0 : -1;
+                };
                 case CAST_NAME        : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_NAME) < 0 ? 0 : -1;
                 case CAST_IMAGE       : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_IMAGE) < 0 ? 0 : -1;
                 case CAST_DESCRIPTION : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_DESCRIPTION) < 0 ? 0 : -1;
@@ -984,6 +1093,11 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int offset = offsetFinder.applyAsInt(ref);
                     return buffer.get(offset + ENDPOS_CAST_GENDER) < 0 ? 0 : -1;
+                };
+                case "Cast_birthday"    : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int offset = offsetFinder.applyAsInt(ref);
+                    return buffer.get(offset + ENDPOS_CAST_BIRTHDAY) < 0 ? 0 : -1;
                 };
                 case "Cast_name"        : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_NAME) < 0 ? 0 : -1;
                 case "Cast_image"       : return ref -> bufferFinder.apply(ref).getInt(offsetFinder.applyAsInt(ref) + ENDPOS_CAST_IMAGE) < 0 ? 0 : -1;
@@ -1014,6 +1128,14 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     return predicate.test(buffer,
                         rowOffset + VARSIZE_BEGINS,
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CAST_GENDER)
+                    );
+                };
+                case CAST_BIRTHDAY    : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return predicate.test(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_CAST_BIRTHDAY - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CAST_BIRTHDAY)
                     );
                 };
                 case CAST_NAME        : return ref -> {
@@ -1061,6 +1183,14 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     return predicate.test(buffer,
                         rowOffset + VARSIZE_BEGINS,
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CAST_GENDER)
+                    );
+                };
+                case "Cast_birthday"    : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return predicate.test(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_CAST_BIRTHDAY - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CAST_BIRTHDAY)
                     );
                 };
                 case "Cast_name"        : return ref -> {
@@ -1115,6 +1245,14 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CAST_GENDER)
                     );
                 };
+                case CAST_BIRTHDAY    : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return compareTo.compare(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_CAST_BIRTHDAY - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CAST_BIRTHDAY)
+                    );
+                };
                 case CAST_NAME        : return ref -> {
                     final ByteBuffer buffer = bufferFinder.apply(ref);
                     final int rowOffset = offsetFinder.applyAsInt(ref);
@@ -1160,6 +1298,14 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     return compareTo.compare(buffer,
                         rowOffset + VARSIZE_BEGINS,
                         rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CAST_GENDER)
+                    );
+                };
+                case "Cast_birthday"    : return ref -> {
+                    final ByteBuffer buffer = bufferFinder.apply(ref);
+                    final int rowOffset = offsetFinder.applyAsInt(ref);
+                    return compareTo.compare(buffer,
+                        rowOffset + VARSIZE_BEGINS + (0x7f & buffer.get(rowOffset + ENDPOS_CAST_BIRTHDAY - Byte.BYTES)),
+                        rowOffset + VARSIZE_BEGINS + buffer.get(rowOffset + ENDPOS_CAST_BIRTHDAY)
                     );
                 };
                 case "Cast_name"        : return ref -> {
@@ -1222,6 +1368,16 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                         bBuffer, bRowOffset + VARSIZE_BEGINS, bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_CAST_GENDER)
                     );
                 };
+                case CAST_BIRTHDAY    : return (aRef, bRef) -> {
+                    final ByteBuffer aBuffer = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuffer = bufferFinder.apply(bRef);
+                    final int aRowOffset = offsetFinder.applyAsInt(aRef);
+                    final int bRowOffset = offsetFinder.applyAsInt(bRef);
+                    return comparator.compare(
+                        aBuffer, aRowOffset + VARSIZE_BEGINS + (0x7f & aBuffer.get(aRowOffset + ENDPOS_CAST_BIRTHDAY - Byte.BYTES)), aRowOffset + VARSIZE_BEGINS + aBuffer.get(aRowOffset + ENDPOS_CAST_BIRTHDAY), 
+                        bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_CAST_BIRTHDAY - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_CAST_BIRTHDAY)
+                    );
+                };
                 case CAST_NAME        : return (aRef, bRef) -> {
                     final ByteBuffer aBuffer = bufferFinder.apply(aRef);
                     final ByteBuffer bBuffer = bufferFinder.apply(bRef);
@@ -1281,6 +1437,16 @@ public abstract class GeneratedCastEntityStoreSerializerImpl implements EntitySt
                     return comparator.compare(
                         aBuffer, aRowOffset + VARSIZE_BEGINS, aRowOffset + VARSIZE_BEGINS + aBuffer.get(aRowOffset + ENDPOS_CAST_GENDER), 
                         bBuffer, bRowOffset + VARSIZE_BEGINS, bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_CAST_GENDER)
+                    );
+                };
+                case "Cast_birthday"    : return (aRef, bRef) -> {
+                    final ByteBuffer aBuffer = bufferFinder.apply(aRef);
+                    final ByteBuffer bBuffer = bufferFinder.apply(bRef);
+                    final int aRowOffset = offsetFinder.applyAsInt(aRef);
+                    final int bRowOffset = offsetFinder.applyAsInt(bRef);
+                    return comparator.compare(
+                        aBuffer, aRowOffset + VARSIZE_BEGINS + (0x7f & aBuffer.get(aRowOffset + ENDPOS_CAST_BIRTHDAY - Byte.BYTES)), aRowOffset + VARSIZE_BEGINS + aBuffer.get(aRowOffset + ENDPOS_CAST_BIRTHDAY), 
+                        bBuffer, bRowOffset + VARSIZE_BEGINS + (0x7f & bBuffer.get(bRowOffset + ENDPOS_CAST_BIRTHDAY - Byte.BYTES)), bRowOffset + VARSIZE_BEGINS + bBuffer.get(bRowOffset + ENDPOS_CAST_BIRTHDAY)
                     );
                 };
                 case "Cast_name"        : return (aRef, bRef) -> {

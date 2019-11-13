@@ -6,7 +6,6 @@ import com.company.movie_review.movie_review.movie_review.cast.Cast;
 import com.company.movie_review.movie_review.movie_review.cast.CastManager;
 import com.company.movie_review.movie_review.movie_review.cast.generated.GeneratedCast.Identifier;
 import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCast;
-import com.company.movie_review.movie_review.movie_review.movie_cast.MovieCastManager;
 import com.company.movie_review.movie_review.movie_review.movies.Movies;
 import com.company.movie_review.movie_review.movie_review.movies.MoviesManager;
 import com.speedment.common.annotation.GeneratedCode;
@@ -28,7 +27,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.*;
+import java.sql.Date;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -60,6 +64,7 @@ public abstract class GeneratedCastController {
             .put("castGender", Cast.CAST_GENDER)
             .put("castImage", Cast.CAST_IMAGE)
             .put("castDescription", Cast.CAST_DESCRIPTION)
+            .put("castBirthday", Cast.CAST_BIRTHDAY)
             .build();
     }
 
@@ -119,6 +124,7 @@ public abstract class GeneratedCastController {
             case "castGender":      return GeneratedCast.Identifier.CAST_GENDER;
             case "castImage":       return GeneratedCast.Identifier.CAST_IMAGE;
             case "castDescription": return GeneratedCast.Identifier.CAST_DESCRIPTION;
+            case "castBirthday":    return GeneratedCast.Identifier.CAST_BIRTHDAY;
             default: throw new IllegalArgumentException(
                 "Unknown column '" + jsonColumn + "'."
             );
@@ -132,6 +138,7 @@ public abstract class GeneratedCastController {
             case CAST_GENDER:      return Cast.CAST_GENDER;
             case CAST_IMAGE:       return Cast.CAST_IMAGE;
             case CAST_DESCRIPTION: return Cast.CAST_DESCRIPTION;
+            case CAST_BIRTHDAY:    return Cast.CAST_BIRTHDAY;
             default: throw new IllegalArgumentException(
                 "Unknown column '" + columnId + "'."
             );
@@ -258,6 +265,22 @@ public abstract class GeneratedCastController {
                         );
                     }
                 }
+                case "castBirthday" : {
+                    final Date v = Date.valueOf(value());
+                    switch (operator()) {
+                        case "eq"   : return Cast.CAST_BIRTHDAY.equal(v);
+                        case "ne"   : return Cast.CAST_BIRTHDAY.notEqual(v);
+                        case "lt"   : return Cast.CAST_BIRTHDAY.lessThan(v);
+                        case "le"   : return Cast.CAST_BIRTHDAY.lessOrEqual(v);
+                        case "gt"   : return Cast.CAST_BIRTHDAY.greaterThan(v);
+                        case "ge"   : return Cast.CAST_BIRTHDAY.greaterOrEqual(v);
+                        case "like" : // Fallthrough
+                        default : throw new IllegalArgumentException(
+                            "'" + operator() + "' is not a valid operator for " +
+                            "Cast.castBirthday."
+                        );
+                    }
+                }
                 default : throw new IllegalArgumentException(
                     "'" + property() + "' is not a valid Cast property."
                 );
@@ -284,6 +307,7 @@ public abstract class GeneratedCastController {
                 case "castGender"      : comparator = Cast.CAST_GENDER.comparator();      break;
                 case "castImage"       : comparator = Cast.CAST_IMAGE.comparator();       break;
                 case "castDescription" : comparator = Cast.CAST_DESCRIPTION.comparator(); break;
+                case "castBirthday"    : comparator = Cast.CAST_BIRTHDAY.comparator();    break;
                 default : throw new IllegalArgumentException(
                     "'" + property() + "' is not a valid Cast property."
                 );

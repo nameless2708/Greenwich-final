@@ -4,6 +4,7 @@ import com.company.movie_review.movie_review.movie_review.cast.Cast;
 import com.speedment.common.annotation.GeneratedCode;
 import com.speedment.runtime.core.util.OptionalUtil;
 
+import java.sql.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -26,6 +27,7 @@ public abstract class GeneratedCastImpl implements Cast {
     private Integer castGender;
     private String castImage;
     private String castDescription;
+    private Date castBirthday;
     
     protected GeneratedCastImpl() {}
     
@@ -52,6 +54,11 @@ public abstract class GeneratedCastImpl implements Cast {
     @Override
     public Optional<String> getCastDescription() {
         return Optional.ofNullable(castDescription);
+    }
+    
+    @Override
+    public Optional<Date> getCastBirthday() {
+        return Optional.ofNullable(castBirthday);
     }
     
     @Override
@@ -85,6 +92,12 @@ public abstract class GeneratedCastImpl implements Cast {
     }
     
     @Override
+    public Cast setCastBirthday(Date castBirthday) {
+        this.castBirthday = castBirthday;
+        return this;
+    }
+    
+    @Override
     public String toString() {
         final StringJoiner sj = new StringJoiner(", ", "{ ", " }");
         sj.add("id = "              + Objects.toString(getId()));
@@ -92,6 +105,7 @@ public abstract class GeneratedCastImpl implements Cast {
         sj.add("castGender = "      + Objects.toString(OptionalUtil.unwrap(getCastGender())));
         sj.add("castImage = "       + Objects.toString(OptionalUtil.unwrap(getCastImage())));
         sj.add("castDescription = " + Objects.toString(OptionalUtil.unwrap(getCastDescription())));
+        sj.add("castBirthday = "    + Objects.toString(OptionalUtil.unwrap(getCastBirthday())));
         return "CastImpl " + sj.toString();
     }
     
@@ -105,6 +119,7 @@ public abstract class GeneratedCastImpl implements Cast {
         if (!Objects.equals(this.getCastGender(), thatCast.getCastGender())) { return false; }
         if (!Objects.equals(this.getCastImage(), thatCast.getCastImage())) { return false; }
         if (!Objects.equals(this.getCastDescription(), thatCast.getCastDescription())) { return false; }
+        if (!Objects.equals(this.getCastBirthday(), thatCast.getCastBirthday())) { return false; }
         return true;
     }
     
@@ -116,6 +131,7 @@ public abstract class GeneratedCastImpl implements Cast {
         hash = 31 * hash + Objects.hashCode(OptionalUtil.unwrap(getCastGender()));
         hash = 31 * hash + Objects.hashCode(OptionalUtil.unwrap(getCastImage()));
         hash = 31 * hash + Objects.hashCode(OptionalUtil.unwrap(getCastDescription()));
+        hash = 31 * hash + Objects.hashCode(OptionalUtil.unwrap(getCastBirthday()));
         return hash;
     }
 }

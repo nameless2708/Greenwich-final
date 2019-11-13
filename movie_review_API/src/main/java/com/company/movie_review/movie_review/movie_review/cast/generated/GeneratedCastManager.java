@@ -29,7 +29,8 @@ public interface GeneratedCastManager extends Manager<Cast> {
         Cast.CAST_NAME,
         Cast.CAST_GENDER,
         Cast.CAST_IMAGE,
-        Cast.CAST_DESCRIPTION
+        Cast.CAST_DESCRIPTION,
+        Cast.CAST_BIRTHDAY
     ));
     
     @Override

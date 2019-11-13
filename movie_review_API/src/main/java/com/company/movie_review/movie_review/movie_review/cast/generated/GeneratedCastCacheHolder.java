@@ -8,6 +8,7 @@ import com.speedment.common.tuple.Tuple2;
 import com.speedment.common.tuple.Tuples;
 import com.speedment.enterprise.datastore.runtime.entitystore.EntityStore;
 import com.speedment.enterprise.datastore.runtime.entitystore.EntityStoreHolder;
+import com.speedment.enterprise.datastore.runtime.fieldcache.FieldCache.OfComparable;
 import com.speedment.enterprise.datastore.runtime.fieldcache.FieldCache.OfInt;
 import com.speedment.enterprise.datastore.runtime.fieldcache.FieldCache.OfString;
 import com.speedment.enterprise.datastore.runtime.fieldcache.FieldCache;
@@ -25,6 +26,7 @@ import com.speedment.runtime.core.component.StreamSupplierComponent;
 import com.speedment.runtime.field.Field;
 import com.speedment.runtime.field.trait.HasIdentifier;
 
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -59,6 +61,7 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
     private final OfInt fieldCastGenderCache;
     private final OfString fieldCastImageCache;
     private final OfString fieldCastDescriptionCache;
+    private final OfComparable<Date> fieldCastBirthdayCache;
     
     public GeneratedCastCacheHolder(
             EntityStore<Cast> entityStore,
@@ -66,7 +69,8 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
             OfString fieldCastNameCache,
             OfInt fieldCastGenderCache,
             OfString fieldCastImageCache,
-            OfString fieldCastDescriptionCache) {
+            OfString fieldCastDescriptionCache,
+            OfComparable<Date> fieldCastBirthdayCache) {
         
         this.entityStore               = requireNonNull(entityStore);
         this.fieldIdCache              = requireNonNull(fieldIdCache);
@@ -74,6 +78,7 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
         this.fieldCastGenderCache      = requireNonNull(fieldCastGenderCache);
         this.fieldCastImageCache       = requireNonNull(fieldCastImageCache);
         this.fieldCastDescriptionCache = requireNonNull(fieldCastDescriptionCache);
+        this.fieldCastBirthdayCache    = requireNonNull(fieldCastBirthdayCache);
     }
     
     @Override
@@ -92,6 +97,7 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
                 case CAST_GENDER      : return (CACHE) fieldCastGenderCache;
                 case CAST_IMAGE       : return (CACHE) fieldCastImageCache;
                 case CAST_DESCRIPTION : return (CACHE) fieldCastDescriptionCache;
+                case CAST_BIRTHDAY    : return (CACHE) fieldCastBirthdayCache;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown enum constant '%s'.", _id)
@@ -106,6 +112,7 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
                 case "Cast_gender"      : return (CACHE) fieldCastGenderCache;
                 case "Cast_image"       : return (CACHE) fieldCastImageCache;
                 case "Cast_description" : return (CACHE) fieldCastDescriptionCache;
+                case "Cast_birthday"    : return (CACHE) fieldCastBirthdayCache;
                 default : {
                     throw new UnsupportedOperationException(
                         String.format("Unknown column name '%s'.", _colName)
@@ -151,7 +158,8 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
             Tuples.of(Cast.CAST_NAME,       fieldCastNameCache),
             Tuples.of(Cast.CAST_GENDER,     fieldCastGenderCache),
             Tuples.of(Cast.CAST_IMAGE,      fieldCastImageCache),
-            Tuples.of(Cast.CAST_DESCRIPTION,fieldCastDescriptionCache)
+            Tuples.of(Cast.CAST_DESCRIPTION,fieldCastDescriptionCache),
+            Tuples.of(Cast.CAST_BIRTHDAY,   fieldCastBirthdayCache)
         )
             .collect(toMap(t2 -> t2.get0().identifier().label(), Tuple2::get1));
         final Map<ColumnLabel,  Map<ColumnLabel, MultiFieldCache<?, ?, ?>>>  multiFieldCaches = createMultiCacheMap();
@@ -160,7 +168,8 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
             Cast.CAST_NAME,
             Cast.CAST_GENDER,
             Cast.CAST_IMAGE,
-            Cast.CAST_DESCRIPTION
+            Cast.CAST_DESCRIPTION,
+            Cast.CAST_BIRTHDAY
         )
             .map(HasIdentifier::identifier)
             .collect(toSet());
@@ -188,6 +197,9 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
         final CompletableFuture<FieldCache.OfString> fieldCastDescriptionCacheFuture =
             DataStoreHolderUtil.buildStringCache(entityStoreFuture, executor, Cast.CAST_DESCRIPTION, 0);
         
+        final CompletableFuture<FieldCache.OfComparable<Date>> fieldCastBirthdayCacheFuture =
+            DataStoreHolderUtil.buildComparableCache(entityStoreFuture, executor, Cast.CAST_BIRTHDAY, 0);
+        
         return entityStoreFuture.thenApplyAsync(entityStore -> {
             try {
                 return new GeneratedCastCacheHolder(
@@ -196,7 +208,8 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
                     fieldCastNameCacheFuture.get(),
                     fieldCastGenderCacheFuture.get(),
                     fieldCastImageCacheFuture.get(),
-                    fieldCastDescriptionCacheFuture.get()
+                    fieldCastDescriptionCacheFuture.get(),
+                    fieldCastBirthdayCacheFuture.get()
                 );
             } catch (final ExecutionException | InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -212,6 +225,7 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
         fieldCastGenderCache.close();
         fieldCastImageCache.close();
         fieldCastDescriptionCache.close();
+        fieldCastBirthdayCache.close();
     }
     
     @Override
@@ -224,7 +238,8 @@ public final class GeneratedCastCacheHolder implements EntityStoreHolder<Cast> {
                 Cast.Identifier.CAST_NAME,
                 Cast.Identifier.CAST_GENDER,
                 Cast.Identifier.CAST_IMAGE,
-                Cast.Identifier.CAST_DESCRIPTION
+                Cast.Identifier.CAST_DESCRIPTION,
+                Cast.Identifier.CAST_BIRTHDAY
             )
         
         );

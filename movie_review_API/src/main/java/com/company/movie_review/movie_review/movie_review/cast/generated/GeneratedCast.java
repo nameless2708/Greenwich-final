@@ -11,6 +11,7 @@ import com.speedment.runtime.field.IntField;
 import com.speedment.runtime.field.StringField;
 import com.speedment.runtime.typemapper.TypeMapper;
 
+import java.sql.Date;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -82,6 +83,17 @@ public interface GeneratedCast {
         TypeMapper.identity(),
         false
     );
+    /**
+     * This Field corresponds to the {@link Cast} field that can be obtained
+     * using the {@link Cast#getCastBirthday()} method.
+     */
+    ComparableField<Cast, Date, Date> CAST_BIRTHDAY = DatastoreFields.createComparableField(
+        Identifier.CAST_BIRTHDAY,
+        o -> OptionalUtil.unwrap(o.getCastBirthday()),
+        Cast::setCastBirthday,
+        TypeMapper.identity(),
+        false
+    );
     
     /**
      * Returns the id of this Cast. The id field corresponds to the database
@@ -123,6 +135,14 @@ public interface GeneratedCast {
      * @return the castDescription of this Cast
      */
     Optional<String> getCastDescription();
+    
+    /**
+     * Returns the castBirthday of this Cast. The castBirthday field corresponds
+     * to the database column movie_review.movie_review.cast.Cast_birthday.
+     * 
+     * @return the castBirthday of this Cast
+     */
+    Optional<Date> getCastBirthday();
     
     /**
      * Sets the id of this Cast. The id field corresponds to the database column
@@ -170,13 +190,23 @@ public interface GeneratedCast {
      */
     Cast setCastDescription(String castDescription);
     
+    /**
+     * Sets the castBirthday of this Cast. The castBirthday field corresponds to
+     * the database column movie_review.movie_review.cast.Cast_birthday.
+     * 
+     * @param castBirthday to set of this Cast
+     * @return             this Cast instance
+     */
+    Cast setCastBirthday(Date castBirthday);
+    
     enum Identifier implements ColumnIdentifier<Cast> {
         
         ID               ("ID"),
         CAST_NAME        ("Cast_name"),
         CAST_GENDER      ("Cast_gender"),
         CAST_IMAGE       ("Cast_image"),
-        CAST_DESCRIPTION ("Cast_description");
+        CAST_DESCRIPTION ("Cast_description"),
+        CAST_BIRTHDAY    ("Cast_birthday");
         
         private final String columnId;
         private final TableIdentifier<Cast> tableIdentifier;

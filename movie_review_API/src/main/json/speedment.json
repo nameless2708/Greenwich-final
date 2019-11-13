@@ -213,6 +213,15 @@
                     "id" : "Cast_description",
                     "ordinalPosition" : 5,
                     "enabled" : true
+                  },
+                  {
+                    "databaseType" : "java.sql.Date",
+                    "expanded" : true,
+                    "nullable" : true,
+                    "name" : "Cast_birthday",
+                    "id" : "Cast_birthday",
+                    "ordinalPosition" : 6,
+                    "enabled" : true
                   }
                 ],
                 "enabled" : true,
@@ -407,6 +416,22 @@
                     "id" : "User_id",
                     "ordinalPosition" : 5,
                     "enabled" : true
+                  },
+                  {
+                    "databaseType" : "java.sql.Timestamp",
+                    "expanded" : true,
+                    "nullable" : true,
+                    "name" : "Create_date",
+                    "id" : "Create_date",
+                    "ordinalPosition" : 6
+                  },
+                  {
+                    "databaseType" : "java.lang.Integer",
+                    "expanded" : true,
+                    "nullable" : true,
+                    "name" : "Rating",
+                    "id" : "Rating",
+                    "ordinalPosition" : 7
                   }
                 ],
                 "enabled" : true,

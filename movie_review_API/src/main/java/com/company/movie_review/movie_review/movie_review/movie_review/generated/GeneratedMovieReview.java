@@ -11,6 +11,7 @@ import com.speedment.runtime.field.IntField;
 import com.speedment.runtime.field.StringField;
 import com.speedment.runtime.typemapper.TypeMapper;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -82,6 +83,28 @@ public interface GeneratedMovieReview {
         TypeMapper.identity(),
         false
     );
+    /**
+     * This Field corresponds to the {@link MovieReview} field that can be
+     * obtained using the {@link MovieReview#getCreateDate()} method.
+     */
+    ComparableField<MovieReview, Timestamp, Timestamp> CREATE_DATE = DatastoreFields.createComparableField(
+        Identifier.CREATE_DATE,
+        o -> OptionalUtil.unwrap(o.getCreateDate()),
+        MovieReview::setCreateDate,
+        TypeMapper.identity(),
+        false
+    );
+    /**
+     * This Field corresponds to the {@link MovieReview} field that can be
+     * obtained using the {@link MovieReview#getRating()} method.
+     */
+    ComparableField<MovieReview, Integer, Integer> RATING = DatastoreFields.createComparableField(
+        Identifier.RATING,
+        o -> OptionalUtil.unwrap(o.getRating()),
+        MovieReview::setRating,
+        TypeMapper.identity(),
+        false
+    );
     
     /**
      * Returns the id of this MovieReview. The id field corresponds to the
@@ -122,6 +145,23 @@ public interface GeneratedMovieReview {
      * @return the userId of this MovieReview
      */
     OptionalInt getUserId();
+    
+    /**
+     * Returns the createDate of this MovieReview. The createDate field
+     * corresponds to the database column
+     * movie_review.movie_review.movie_review.Create_date.
+     * 
+     * @return the createDate of this MovieReview
+     */
+    Optional<Timestamp> getCreateDate();
+    
+    /**
+     * Returns the rating of this MovieReview. The rating field corresponds to
+     * the database column movie_review.movie_review.movie_review.Rating.
+     * 
+     * @return the rating of this MovieReview
+     */
+    OptionalInt getRating();
     
     /**
      * Sets the id of this MovieReview. The id field corresponds to the database
@@ -168,13 +208,34 @@ public interface GeneratedMovieReview {
      */
     MovieReview setUserId(Integer userId);
     
+    /**
+     * Sets the createDate of this MovieReview. The createDate field corresponds
+     * to the database column
+     * movie_review.movie_review.movie_review.Create_date.
+     * 
+     * @param createDate to set of this MovieReview
+     * @return           this MovieReview instance
+     */
+    MovieReview setCreateDate(Timestamp createDate);
+    
+    /**
+     * Sets the rating of this MovieReview. The rating field corresponds to the
+     * database column movie_review.movie_review.movie_review.Rating.
+     * 
+     * @param rating to set of this MovieReview
+     * @return       this MovieReview instance
+     */
+    MovieReview setRating(Integer rating);
+    
     enum Identifier implements ColumnIdentifier<MovieReview> {
         
-        ID       ("ID"),
-        MOVIE_ID ("Movie_id"),
-        CONTENT  ("Content"),
-        TAG      ("Tag"),
-        USER_ID  ("User_id");
+        ID          ("ID"),
+        MOVIE_ID    ("Movie_id"),
+        CONTENT     ("Content"),
+        TAG         ("Tag"),
+        USER_ID     ("User_id"),
+        CREATE_DATE ("Create_date"),
+        RATING      ("Rating");
         
         private final String columnId;
         private final TableIdentifier<MovieReview> tableIdentifier;
