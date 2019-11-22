@@ -5,6 +5,15 @@ public class MovieReviewRequest {
     private String review;
     private Integer user_id;
     private Integer tag;
+    private Integer rating;
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
 
     public Integer getTag() {
         return tag;

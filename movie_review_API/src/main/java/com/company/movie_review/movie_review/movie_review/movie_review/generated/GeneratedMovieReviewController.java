@@ -20,11 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
@@ -67,7 +63,7 @@ public abstract class GeneratedMovieReviewController {
         try{
             MovieReviewApplication app = new MovieReviewApplicationBuilder().withPassword("root").build();
             MovieReviewManager reviews = app.getOrThrow(MovieReviewManager.class);
-            MovieReview entity = reviews.persist(new MovieReviewImpl().setMovieId(body.getMovie_id()).setContent(body.getReview()).setUserId(body.getUser_id()).setTag(body.getTag()));
+            MovieReview entity = reviews.persist(new MovieReviewImpl().setMovieId(body.getMovie_id()).setContent(body.getReview()).setUserId(body.getUser_id()).setTag(body.getTag()).setRating(body.getRating()).setCreateDate(new Timestamp(new Date().getTime())));
             return entity;
         }
         catch (Exception e){
@@ -82,9 +78,10 @@ public abstract class GeneratedMovieReviewController {
             @PathVariable @NotNull int id) {
         MovieReviewApplication app = new MovieReviewApplicationBuilder().withPassword("root").build();
         MovieReviewManager movieReview = app.getOrThrow(MovieReviewManager.class);
-        return movieReview.stream().filter(MovieReview.MOVIE_ID.equal(id)).toArray();
+        return movieReview.stream().filter(MovieReview.MOVIE_ID.equal(id)).sorted(MovieReview.CREATE_DATE.comparator().reversed()).toArray();
     }
-    
+
+    @CrossOrigin
     @GetMapping(path = "/movie_review", produces = "application/json")
     public String get(
             @RequestParam(name = "filter", defaultValue = "[]") String filters,

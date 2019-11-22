@@ -65,6 +65,28 @@ public abstract class GeneratedMoviesController {
     }
 
     @CrossOrigin
+    @GetMapping(path = "/movies/search", produces = "application/json")
+    public List<Object> findByName(
+                                   @RequestParam(name = "keyword", defaultValue = "") String keyword){
+
+        try{
+            if(keyword.trim().length() > 3){
+                MovieReviewApplication app = new MovieReviewApplicationBuilder().withPassword("root").build();
+                MoviesManager movies = app.getOrThrow(MoviesManager.class);
+                List<Object> movieObj = movies.stream().filter(Movies.ORIGINAL_TITLE.contains(keyword).or(Movies.OVERVIEW.contains(keyword))).collect(toList());
+                return movieObj;
+            }
+            else{
+                return null;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @CrossOrigin
     @GetMapping(path = "/movies/{id}", produces = "application/json")
     public Object findById(@PathVariable @NotNull int id){
 
@@ -91,7 +113,8 @@ public abstract class GeneratedMoviesController {
             return null;
         }
     }
-    
+
+    @CrossOrigin
     @GetMapping(path = "/movies", produces = "application/json")
     public String get(
             @RequestParam(name = "filter", defaultValue = "[]") String filters,
