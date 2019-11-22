@@ -1,0 +1,84 @@
+<section class="mb-4" id="detalhes" *ngIf="detail.hasOwnProperty('movie') && detail.hasOwnProperty('cast')">
+  <h1 class="text-info">{{ detail.movie.originalTitle }}</h1>
+  <hr>
+  <div class="row">
+    <div class="col-sm-4">
+      <img class="img-thumbnail" [src]="'https://image.tmdb.org/t/p/w500' + detail.movie.posterPath" [alt]="detail.movie.originalTitle">
+    </div>
+    <div class="col-sm-8">
+      <dl class="movie">
+        <dt>{{ 'movie.overview' | translate }}</dt>
+        <dd>{{ detail.movie.overview }}</dd>
+        <dt>{{ 'movie.averageVote' | translate }}</dt>
+        <dd><span class="badge badge-pill badge-secondary voteAverage">{{ detail.movie.voteAverage * 10 }}%</span></dd>
+        <dt>Rating for this movie</dt>
+        <dd><span class="badge badge-pill badge-secondary voteAverage">{{ detail.movie.voteAverage * 10 }}%</span></dd>
+        <dt>{{ 'movie.release' | translate }}</dt>
+        <dd>{{ detail.movie.releaseDate | date: 'longDate' }}</dd>
+        <dt>Cast</dt>
+        <dd *ngFor="let cast of detail.cast">
+          <span style="color: cornflowerblue">{{ cast.castName  }}</span> as <span>{{cast.roleName}}</span>
+        </dd>
+        <!--<dt>{{ 'movie.genres' | translate }}</dt>-->
+
+      </dl>
+      <button
+        class="btn btn-sm btn-outline-info"
+        (click)="addFavorite()"
+        *ngIf="!favorite">
+        {{ 'movie.addFavorite' | translate }}
+      </button>
+      <button
+        class="btn btn-sm btn-outline-info"
+        (click)="removeFavorite()"
+        *ngIf="favorite">
+        {{ 'movie.removeFavorite' | translate }}
+      </button>
+    </div>
+
+  </div>
+  <div class="row">
+
+    <div class="col-12">
+      <span>Review this movie</span>
+    </div>
+  </div>
+  <div class="col-12">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+  </div>
+  <hr>
+  <div class="row ">
+    <div class="col-12">
+      <textarea class="w-100" placeholder="Write your review here"></textarea>
+      <button class="btn-primary">Submit</button>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-3">
+      <h3>User reviews</h3>
+    </div>
+    <div class="border border-primary mt-5 ml-5 mr-5">
+      <div class="col-12">
+        <img width="16px" height="16px" src="https://img.icons8.com/color/48/000000/filled-star.png">
+        <img width="16px" height="16px" src="https://img.icons8.com/color/48/000000/filled-star.png">
+        <img width="16px" height="16px" src="https://img.icons8.com/color/48/000000/filled-star.png">
+        <img width="16px" height="16px" src="https://img.icons8.com/color/48/000000/filled-star.png">
+        <img src="https://img.icons8.com/office/16/000000/star.png">
+        <p>10/10/2010 by Anonymous</p>
+      </div>
+      <div class="col-12">
+        This is my first review on IMDb but after watching this film and being bitterly disappointed i felt i had to write one.
+        I want to begin by saying what i liked so much about the first one to illustrate the differences between the 2 films. The first one blew me away, the fight scenes were absolutely brilliant, before seeing ip man i was always a fan of the jet li stuff but donnie yen changed everything in the first film, it made me fall in love with win chung, and he was awesome, none of the fight scenes were over the top they were simple but thats what made them brilliant. In the second one i felt like i was watching a John Woo film, death by slow motion.
+      </div>
+    </div>
+  </div>
+</section>

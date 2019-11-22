@@ -1,0 +1,82 @@
+<section class="mb-4" id="detalhes" *ngIf="detail.hasOwnProperty('movies') && detail.hasOwnProperty('cast')">
+  <h1 class="text-info">{{ detail.movies.originalTitle }}</h1>
+  <hr>
+  <div class="row">
+    <div class="col-sm-4">
+      <img class="img-thumbnail" [src]="'https://image.tmdb.org/t/p/w500' + detail.movies.posterPath" [alt]="detail.movies.originalTitle">
+    </div>
+    <div class="col-sm-8">
+      <dl class="movie">
+        <dt>{{ 'movie.overview' | translate }}</dt>
+        <dd>{{ detail.movies.overview }}</dd>
+        <dt>{{ 'movie.averageVote' | translate }}</dt>
+        <dd><span class="badge badge-pill badge-secondary voteAverage">{{ detail.movies.voteAverage * 10 }}%</span></dd>
+        <dt>Rating for this movie</dt>
+        <dd><span class="badge badge-pill badge-secondary voteAverage">{{ detail.movies.voteAverage * 10 }}%</span></dd>
+        <dt>{{ 'movie.release' | translate }}</dt>
+        <dd>{{ detail.movies.releaseDate | date: 'longDate' }}</dd>
+        <dt>Cast</dt>
+        <dd *ngFor="let cast of detail.cast">
+          <span style="color: cornflowerblue">{{ cast.castName  }}</span> as <span>{{cast.roleName}}</span>
+        </dd>
+        <!--<dt>{{ 'movie.genres' | translate }}</dt>-->
+
+      </dl>
+      <button
+        class="btn btn-sm btn-outline-info"
+        (click)="addFavorite()"
+        *ngIf="!favorite">
+        {{ 'movie.addFavorite' | translate }}
+      </button>
+      <button
+        class="btn btn-sm btn-outline-info"
+        (click)="removeFavorite()"
+        *ngIf="favorite">
+        {{ 'movie.removeFavorite' | translate }}
+      </button>
+    </div>
+
+  </div>
+  <div class="row">
+
+    <div class="col-12">
+      <span>Review this movie</span>
+    </div>
+  </div>
+  <div class="col-12">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+    <img src="https://img.icons8.com/office/16/000000/star.png">
+  </div>
+  <hr>
+  <div class="row ">
+    <div class="col-12">
+      <textarea class="w-100" placeholder="Write your review here" [(ngModel)]="userReview"></textarea>
+      <button class="btn-primary" (click)="submitReview()">Submit</button>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-3">
+      <h3>User reviews</h3>
+    </div>
+
+    <div class="border border-primary mt-5  col-12" *ngFor="let review of reviewList">
+      <div class="col-12" >
+        <img *ngFor="let item of review.rating | rate" width="16px" height="16px" src="https://img.icons8.com/color/48/000000/filled-star.png">
+        <img *ngFor="let item of 10-review.rating | rate" src="https://img.icons8.com/office/16/000000/star.png">
+        <p>{{review.createDate | date}} by Anonymous <span *ngIf="review.tag != null && review.tag==1">😄</span>
+          <span *ngIf="review.tag != null && review.tag==0">😫</span></p>
+      </div>
+      <div class="col-12">
+        {{review.content}}
+      </div>
+    </div>
+  </div>
+</section>
